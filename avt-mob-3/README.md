@@ -8,6 +8,7 @@
 ### Установка APK на эмулятор
 1. Выделили apk и перетащили (drag and drop) в запущенный эмулятор/Либо 'adb install org.wikipedia.apk'
 2. Убедиться, что приложение установлено и запускается
+
 ![alt text](https://github.com/artsok/training/blob/master/images/Nexus_6P_API_27:5554%202018-07-15%2014-14-47.png)
 
 
