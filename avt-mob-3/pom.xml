@@ -25,7 +25,6 @@
         <allure.version>2.6.0</allure.version>
         <appium.version>6.1.0</appium.version>
     </properties>
-
     <dependencies>
         <!-- Бибилиотека для тестов Kotlin -->
         <dependency>
@@ -40,12 +39,12 @@
             <version>${kotlin.version}</version>
         </dependency>
         <!-- Подключили Allure Junit -->
-        <dependency>
-            <groupId>io.qameta.allure</groupId>
-            <artifactId>allure-junit4</artifactId>
-            <version>${allure.version}</version>
-            <scope>test</scope>
-        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>io.qameta.allure</groupId>-->
+            <!--<artifactId>allure-junit4</artifactId>-->
+            <!--<version>${allure.version}</version>-->
+            <!--<scope>test</scope>-->
+        <!--</dependency>-->
         <!-- Подключили slf4j (использование стандартного вывода для логов) -->
         <dependency>
             <groupId>org.slf4j</groupId>
@@ -53,17 +52,17 @@
             <version>${slf4j.version}</version>
         </dependency>
         <!-- Подключили вторую версию htmlelements -->
-        <dependency>
-            <groupId>io.qameta.htmlelements</groupId>
-            <artifactId>htmlelements</artifactId>
-            <version>RELEASE</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.seleniumhq.selenium</groupId>
-                    <artifactId>selenium-java</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>io.qameta.htmlelements</groupId>-->
+            <!--<artifactId>htmlelements</artifactId>-->
+            <!--<version>RELEASE</version>-->
+            <!--<exclusions>-->
+                <!--<exclusion>-->
+                    <!--<groupId>org.seleniumhq.selenium</groupId>-->
+                    <!--<artifactId>selenium-java</artifactId>-->
+                <!--</exclusion>-->
+            <!--</exclusions>-->
+        <!--</dependency>-->
         <!-- Подключили Appium клиент для Java -->
         <dependency>
             <groupId>io.appium</groupId>
@@ -94,30 +93,30 @@
                     </execution>
                 </executions>
             </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <version>2.20</version>
-                <configuration>
-                    <testFailureIgnore>false</testFailureIgnore>
-                    <argLine>
-                        -javaagent:"${settings.localRepository}/org/aspectj/aspectjweaver/${aspectj.version}/aspectjweaver-${aspectj.version}.jar"
-                    </argLine>
-                    <properties>
-                        <property>
-                            <name>listener</name>
-                            <value>io.qameta.allure.junit4.AllureJunit4</value>
-                        </property>
-                    </properties>
-                </configuration>
-                <dependencies>
-                    <dependency>
-                        <groupId>org.aspectj</groupId>
-                        <artifactId>aspectjweaver</artifactId>
-                        <version>${aspectj.version}</version>
-                    </dependency>
-                </dependencies>
-            </plugin>
+            <!--<plugin>-->
+                <!--<groupId>org.apache.maven.plugins</groupId>-->
+                <!--<artifactId>maven-surefire-plugin</artifactId>-->
+                <!--<version>2.20</version>-->
+                <!--<configuration>-->
+                    <!--<testFailureIgnore>false</testFailureIgnore>-->
+                    <!--<argLine>-->
+                        <!-- -javaagent:"${settings.localRepository}/org/aspectj/aspectjweaver/${aspectj.version}/aspectjweaver-${aspectj.version}.jar"-->
+                    <!--</argLine>-->
+                    <!--<properties>-->
+                        <!--<property>-->
+                            <!--<name>listener</name>-->
+                            <!--<value>io.qameta.allure.junit4.AllureJunit4</value>-->
+                        <!--</property>-->
+                    <!--</properties>-->
+                <!--</configuration>-->
+                <!--<dependencies>-->
+                    <!--<dependency>-->
+                        <!--<groupId>org.aspectj</groupId>-->
+                        <!--<artifactId>aspectjweaver</artifactId>-->
+                        <!--<version>${aspectj.version}</version>-->
+                    <!--</dependency>-->
+                <!--</dependencies>-->
+            <!--</plugin>-->
         </plugins>
     </build>
 </project>
