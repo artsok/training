@@ -12,4 +12,5 @@
 9. Запустим Appium Server, нажмем кнопку Start Inspector Session и пропишем  capabilities, 
 чтобы Appium подключился к нашему приложенияю.
 ![alt text](https://github.com/artsok/training/blob/master/images/Appium%202018-07-15%2013-19-13.png)
+
   
