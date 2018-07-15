@@ -3,6 +3,7 @@
 1. Нашли приложение в Google Play
 2. Скопировали web-ссылку c Google Play
 3. Открыли apps.evozi.com/apk-downloader/, вставили ссылку на приложение и нажали скачать
+
 ![alt text](https://github.com/artsok/training/blob/master/images/APK%20Downloader%202018-07-15%2014-11-00.png)
 
 ### Установка APK на эмулятор
@@ -24,6 +25,7 @@
 чтобы найти главную активность. Далее в созданном файле ищем по пакету MainActivity
 9. Запустим Appium Server, нажмем кнопку Start Inspector Session и пропишем  capabilities, 
 чтобы Appium подключился к нашему приложенияю.
+
 ![alt text](https://github.com/artsok/training/blob/master/images/Appium%202018-07-15%2013-19-13.png)
 ![alt text](https://github.com/artsok/training/blob/master/images/Appium%202018-07-15%2014-01-06.png)
 
