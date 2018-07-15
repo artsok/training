@@ -3,7 +3,7 @@
 1. Нашли приложение в Google Play
 2. Скопировали web-ссылку c Google Play
 3. Открыли apps.evozi.com/apk-downloader/, вставили ссылку на приложение и нажали скачать
-Картинка
+![alt text](https://github.com/artsok/training/blob/master/images/APK%20Downloader%202018-07-15%2014-11-00.png)
 
 ### Установка APK на эмулятор
 1. Выделили apk и перетащили (drag and drop) в запущенный эмулятор/Либо 'adb install org.wikipedia.apk'
