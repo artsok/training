@@ -28,12 +28,11 @@ class FirstTest {
             setCapability("appActivity", ".main.MainActivity")
             setCapability("app", apkFile.absoluteFile) //Можно также ссылкой. Пример: "http://appium.s3.amazonaws.com/TestApp6.0.app.zip"
         }
-
         driver = AndroidDriver(URL("http://127.0.0.1:4723/wd/hub"), capabilities)
     }
 
     @Test
-    fun shouldOpenWikAplication() {
+    fun shouldOpenWikApplication() {
         TimeUnit.SECONDS.sleep(5)
     }
 
