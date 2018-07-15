@@ -30,6 +30,9 @@
 ![alt text](https://github.com/artsok/training/blob/master/images/Appium%202018-07-15%2014-01-06.png)
 
 Далее нажимаем кнопку Start Session, начинает работать Appium, открыл приложение и подключился к нему с помощью собственного инспектора.
+
+![alt text](https://github.com/artsok/training/blob/master/images/Appium%202018-07-15%2014-26-39.png)
+
 Это означает, что все capabilities были указаны верно. 
 
   
