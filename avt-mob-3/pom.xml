@@ -8,6 +8,7 @@
 
     <name>avt-mob-3</name>
     <description>Mobile Automation Training</description>
+
     <developers>
         <developer>
             <name>Artem Sokovets</name>
@@ -20,6 +21,9 @@
         <maven.compiler.target>1.8</maven.compiler.target>
         <kotlin.version>1.2.31</kotlin.version>
         <aspectj.version>1.8.10</aspectj.version>
+        <slf4j.version>1.7.25</slf4j.version>
+        <allure.version>2.6.0</allure.version>
+        <appium.version>6.1.0</appium.version>
     </properties>
 
     <dependencies>
@@ -39,23 +43,36 @@
         <dependency>
             <groupId>io.qameta.allure</groupId>
             <artifactId>allure-junit4</artifactId>
-            <version>2.6.0</version>
+            <version>${allure.version}</version>
             <scope>test</scope>
         </dependency>
         <!-- Подключили slf4j (использование стандартного вывода для логов) -->
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-simple</artifactId>
-            <version>1.7.25</version>
+            <version>${slf4j.version}</version>
         </dependency>
         <!-- Подключили вторую версию htmlelements -->
         <dependency>
             <groupId>io.qameta.htmlelements</groupId>
             <artifactId>htmlelements</artifactId>
             <version>RELEASE</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.seleniumhq.selenium</groupId>
+                    <artifactId>selenium-java</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <!-- Подключили Appium клиент для Java -->
+        <dependency>
+            <groupId>io.appium</groupId>
+            <artifactId>java-client</artifactId>
+            <version>${appium.version}</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
-
+    <!-- Для компиляции Kotlin -->
     <build>
         <plugins>
             <plugin>
