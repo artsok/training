@@ -35,11 +35,13 @@ class FirstTest {
     }
 
     @Test
-    fun shouldOpenWikApplication() {
+    fun shouldFindJavaInSearchList() {
         val findBt = driver.findElement(By.xpath("//*[contains(@text, 'Search Wikipedia')]"))
         findBt.click()
         val searchInput = waitElement(By.xpath("//*[contains(@text, 'Search…')]"))
-        searchInput.sendKeys("Appium")
+        searchInput.sendKeys("Java")
+        waitElement(By.xpath("//*[@resource-id='org.wikipedia:id/page_list_item_container']" +
+                "//*[contains(@text, 'Object-oriented programming language')]"))
     }
 
     /**
