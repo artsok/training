@@ -44,9 +44,9 @@
 2. Выполнить действия с элементом:
 ```kotlin
         val findBt = driver.findElement(By.xpath("//*[contains(@text, 'Search Wikipedia')]"))
-        findBt.click()
+        findBt.click() //Кликаем 
         val searchInput = driver.findElementByXPath("//*[contains(@text, 'Search…')]")
-        searchInput.sendKeys("Allure Server")
+        searchInput.sendKeys("Allure Server") //Отправляем текст в поле
 ```
 
   
