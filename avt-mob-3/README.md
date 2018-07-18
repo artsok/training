@@ -39,6 +39,7 @@
 
 ### Простые сценарии в Appium
 1. Чтобы найти элемент необходимо выполнить его поиск с помощью UI Automator Viewer, либо Appium Viewer.
+![alt text](https://github.com/artsok/training/blob/master/images/UI%20Automator%20Viewer%202018-07-18%2018-45-51.png)
 
 2. Выполнить действия с элементом:
 ```kotlin
