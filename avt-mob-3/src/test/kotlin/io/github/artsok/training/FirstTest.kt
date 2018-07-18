@@ -38,11 +38,14 @@ class FirstTest {
     fun shouldOpenWikApplication() {
         val findBt = driver.findElement(By.xpath("//*[contains(@text, 'Search Wikipedia')]"))
         findBt.click()
-        val searchInput = waitElement(By.xpath("//*[contains(@text, 'Search…')]"), timeOut = 5)
+        val searchInput = waitElement(By.xpath("//*[contains(@text, 'Search…')]"))
         searchInput.sendKeys("Appium")
     }
 
-    private fun waitElement(locator:By, errorMassage:String = "Can't find element", timeOut:Long): WebElement {
+    /**
+     * Wait element when it appear and then make actions with it
+     */
+    private fun waitElement(locator:By, errorMassage:String = "Can't find element", timeOut:Long = 5): WebElement {
         val driverWait = WebDriverWait(driver, timeOut).withMessage("$errorMassage\n")
         return driverWait.until(ExpectedConditions.presenceOfElementLocated(locator))
     }
