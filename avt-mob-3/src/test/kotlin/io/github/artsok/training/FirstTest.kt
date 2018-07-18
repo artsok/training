@@ -6,7 +6,10 @@ import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import org.openqa.selenium.By
+import org.openqa.selenium.WebElement
 import org.openqa.selenium.remote.DesiredCapabilities
+import org.openqa.selenium.support.ui.ExpectedConditions
+import org.openqa.selenium.support.ui.WebDriverWait
 import java.io.File
 import java.net.URL
 
@@ -20,7 +23,7 @@ class FirstTest {
     fun setUp() {
         apkFile = File(this.javaClass.getResource("/apk/org.wikipedia.apk").file)
 
-        val capabilities: DesiredCapabilities = DesiredCapabilities().apply {
+        val capabilities = DesiredCapabilities().apply {
             setCapability("platformName", "Android")
             setCapability("deviceName", "Nexus 6P API 27")
             setCapability("platformVersion", "8.1")
@@ -35,8 +38,13 @@ class FirstTest {
     fun shouldOpenWikApplication() {
         val findBt = driver.findElement(By.xpath("//*[contains(@text, 'Search Wikipedia')]"))
         findBt.click()
-        val searchInput = driver.findElementByXPath("//*[contains(@text, 'Search…')]")
+        val searchInput = waitElement(By.xpath("//*[contains(@text, 'Search…')]"), timeOut = 5)
         searchInput.sendKeys("Appium")
+    }
+
+    private fun waitElement(locator:By, errorMassage:String = "Can't find element", timeOut:Long): WebElement {
+        val driverWait = WebDriverWait(driver, timeOut).withMessage("$errorMassage\n")
+        return driverWait.until(ExpectedConditions.presenceOfElementLocated(locator))
     }
 
 
