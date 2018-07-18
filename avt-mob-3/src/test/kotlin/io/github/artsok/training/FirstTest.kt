@@ -33,8 +33,10 @@ class FirstTest {
 
     @Test
     fun shouldOpenWikApplication() {
-        val element = driver.findElement(By.xpath("//*[contains(@text, 'Search Wikipedia')]"))
-        element.click()
+        val findBt = driver.findElement(By.xpath("//*[contains(@text, 'Search Wikipedia')]"))
+        findBt.click()
+        val searchInput = driver.findElementByXPath("//*[contains(@text, 'Search…')]")
+        searchInput.sendKeys("Appium")
     }
 
 

@@ -35,6 +35,17 @@
 
 ![alt text](https://github.com/artsok/training/blob/master/images/Appium%202018-07-15%2014-26-39.png)
 
-Это означает, что все capabilities были указаны верно. 
+Это означает, что все capabilities были указаны верно.
+
+### Простые сценарии в Appium
+1. Чтобы найти элемент необходимо выполнить его поиск с помощью UI Automator Viewer, либо Appium Viewer.
+
+2. Выполнить действия с элементом:
+```kotlin
+        val findBt = driver.findElement(By.xpath("//*[contains(@text, 'Search Wikipedia')]"))
+        findBt.click()
+        val searchInput = driver.findElementByXPath("//*[contains(@text, 'Search…')]")
+        searchInput.sendKeys("Allure Server")
+```
 
   
