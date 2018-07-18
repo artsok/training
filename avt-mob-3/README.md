@@ -51,7 +51,7 @@
 
 3. Использовать ожидания при работе с WebElement'ами (using WebDriverWait)
  ```kotlin
-     private fun waitElement(locator:By, errorMassage:String = "Can't find element", timeOut:Long): WebElement {
+     private fun waitElement(locator:By, errorMassage:String = "Can't find element", timeOut:Long = 5): WebElement {
          val driverWait = WebDriverWait(driver, timeOut).withMessage("$errorMassage\n")
          return driverWait.until(ExpectedConditions.presenceOfElementLocated(locator))
      }
