@@ -5,10 +5,10 @@ import io.appium.java_client.android.AndroidDriver
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
+import org.openqa.selenium.By
 import org.openqa.selenium.remote.DesiredCapabilities
 import java.io.File
 import java.net.URL
-import java.util.concurrent.TimeUnit
 
 class FirstTest {
 
@@ -33,7 +33,8 @@ class FirstTest {
 
     @Test
     fun shouldOpenWikApplication() {
-        TimeUnit.SECONDS.sleep(5)
+        val element = driver.findElement(By.xpath("//*[contains(@text, 'Search Wikipedia')]"))
+        element.click()
     }
 
 
