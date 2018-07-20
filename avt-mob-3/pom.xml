@@ -24,6 +24,7 @@
         <slf4j.version>1.7.25</slf4j.version>
         <allure.version>2.6.0</allure.version>
         <appium.version>6.1.0</appium.version>
+
     </properties>
     <dependencies>
         <!-- Бибилиотека для тестов Kotlin -->
@@ -51,18 +52,24 @@
             <artifactId>slf4j-simple</artifactId>
             <version>${slf4j.version}</version>
         </dependency>
-        <!-- Подключили вторую версию htmlelements -->
-        <!--<dependency>-->
-            <!--<groupId>io.qameta.htmlelements</groupId>-->
-            <!--<artifactId>htmlelements</artifactId>-->
-            <!--<version>RELEASE</version>-->
-            <!--<exclusions>-->
-                <!--<exclusion>-->
-                    <!--<groupId>org.seleniumhq.selenium</groupId>-->
-                    <!--<artifactId>selenium-java</artifactId>-->
-                <!--</exclusion>-->
-            <!--</exclusions>-->
-        <!--</dependency>-->
+        <dependency>
+            <groupId>ru.yandex.qatools.matchers</groupId>
+            <artifactId>webdriver-matchers</artifactId>
+            <version>1.4.1</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>ru.yandex.qatools.matchers</groupId>
+            <artifactId>matcher-decorators</artifactId>
+            <version>1.4.1</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.hamcrest</groupId>
+            <artifactId>hamcrest-all</artifactId>
+            <version>1.3</version>
+        </dependency>
+
         <!-- Подключили Appium клиент для Java -->
         <dependency>
             <groupId>io.appium</groupId>

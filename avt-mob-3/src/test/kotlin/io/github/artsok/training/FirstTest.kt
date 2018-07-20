@@ -1,22 +1,27 @@
 package io.github.artsok.training
 
+
 import io.appium.java_client.MobileElement
 import io.appium.java_client.android.AndroidDriver
+import org.hamcrest.MatcherAssert.assertThat
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import org.openqa.selenium.By
+import org.openqa.selenium.By.xpath
 import org.openqa.selenium.WebElement
 import org.openqa.selenium.remote.DesiredCapabilities
 import org.openqa.selenium.support.ui.ExpectedConditions
 import org.openqa.selenium.support.ui.WebDriverWait
+import ru.yandex.qatools.matchers.decorators.TimeoutWaiter.timeoutHasExpired
+import ru.yandex.qatools.matchers.decorators.WaiterMatcherDecorator.decorateMatcherWithWaiter
+import ru.yandex.qatools.matchers.webdriver.driver.CanFindElementMatcher.canFindElement
 import java.io.File
 import java.net.URL
 
 class FirstTest {
 
     lateinit var apkFile: File
-
     lateinit var driver: AndroidDriver<MobileElement>
 
     @Before
@@ -36,20 +41,21 @@ class FirstTest {
 
     @Test
     fun shouldFindJavaInSearchList() {
-        val findBt = driver.findElement(By.xpath("//*[contains(@text, 'Search Wikipedia')]"))
-        findBt.click()
-        val searchInput = waitElement(By.xpath("//*[contains(@text, 'Search…')]"))
-        searchInput.sendKeys("Java")
-        waitElement(By.xpath("//*[@resource-id='org.wikipedia:id/page_list_item_container']" +
-                "//*[contains(@text, 'Object-oriented programming language')]"))
+        actions(xpath("//*[contains(@text, 'Search Wikipedia')]"), WebElement::click, "Can't find Search Wikipedia input")
+        actions(xpath("//*[contains(@text, 'Search…')]"), { element: WebElement -> element.sendKeys("Java") })
+        assertThat(driver, decorateMatcherWithWaiter(
+                canFindElement(By.xpath("//*[@resource-id='org.wikipedia:id/page_list_item_container']" +
+                        "//*[contains(@text, 'Object-oriented programming language')]")), timeoutHasExpired(5000)))
     }
 
     /**
-     * Wait element when it appear and then make actions with it
+     * Checking that an element is present on the DOM of a page and then make actions with it
      */
-    private fun waitElement(locator:By, errorMassage:String = "Can't find element", timeOut:Long = 5): WebElement {
+    private fun actions(by: By, function: (WebElement) -> Unit, errorMassage: String = "Can't find element", timeOut: Long = 5): WebElement {
         val driverWait = WebDriverWait(driver, timeOut).withMessage("$errorMassage\n")
-        return driverWait.until(ExpectedConditions.presenceOfElementLocated(locator))
+        val element = driverWait.until(ExpectedConditions.presenceOfElementLocated(by))
+        function.invoke(element)
+        return element
     }
 
 
@@ -60,3 +66,4 @@ class FirstTest {
         }
     }
 }
+
