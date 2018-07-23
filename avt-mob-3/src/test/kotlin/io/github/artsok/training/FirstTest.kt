@@ -99,7 +99,49 @@ class FirstTest {
     }
 
     /**
-     * Checking that an webelement is present on the DOM of a page and then make actions with it
+     * Написать тест, который:
+        1. Ищет какое-то слово
+        2. Убеждается, что найдено несколько статей
+        3. Отменяет поиск
+        4. Убеждается, что результат поиска пропал
+     */
+    @Test
+    fun afterCancelSearchesListShouldBeEmpty() {
+        actions(xpath("//*[contains(@text, 'Search Wikipedia')]"),
+                WebElement::click,
+                "Can't find Search Wikipedia input")
+        actions(xpath("//*[contains(@text, 'Search…')]"),
+                { element: WebElement -> element.sendKeys("C++") })
+
+        val searchResultsList = getListViewElement(id("org.wikipedia:id/search_results_list"),
+                id("org.wikipedia:id/page_list_item_container"))
+        assertThat("It's no results with you search text", searchResultsList.size, greaterThanOrEqualTo(1))
+
+        actions(id("search_close_btn"),
+                WebElement::click,
+                "Can't find Search Close Bottom")
+        assertThat("Searche list not empty", driver, should(not(canFindElement(id("org.wikipedia:id/search_results_list")))))
+    }
+
+    /**
+     * Clear previous searchs
+     */
+    private fun clearRecentSearches() {
+        actions(xpath("//*[contains(@text, 'Search Wikipedia')]"),
+                WebElement::click)
+    }
+
+
+    /**
+     * Return list of web elements
+     */
+    private fun getListViewElement(listBy: By, listElementBy:By, timeOut:Long = 5) :List<WebElement> {
+        val listView = WebDriverWait(driver, timeOut).until(ExpectedConditions.presenceOfElementLocated(listBy))
+        return listView.findElements<WebElement>(listElementBy);
+    }
+
+    /**
+     * Checking that an web element is present on the DOM of a page and then make actions with it
      */
     private fun actions(by: By, function: ((WebElement) -> Unit)? = null, errorMassage: String = "Can't find element '$by'", timeOut: Long = 5): WebElement {
         val driverWait = WebDriverWait(driver, timeOut).withMessage("$errorMassage\n")
@@ -110,7 +152,7 @@ class FirstTest {
     }
 
     /**
-     * Check if webelement is present or not
+     * Check if web element is present or not
      */
     private fun waitForElementNotPresent(by: By, errorMessage: String, timeOut: Long): Boolean {
         val driverWait = WebDriverWait(driver, timeOut).withMessage("$errorMessage\n")
