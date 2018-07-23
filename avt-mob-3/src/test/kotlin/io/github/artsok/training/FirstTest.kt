@@ -55,6 +55,8 @@ class FirstTest {
     @Test
     fun searchCloseBtnShouldNotExistOnMainPage() {
         actions(xpath("//*[contains(@text, 'Search Wikipedia')]"), WebElement::click, "Can't find Search Wikipedia input")
+        actions(xpath("//*[contains(@text, 'Search…')]"), { element: WebElement -> element.sendKeys("Allure") })
+        actions(id("org.wikipedia:id/search_src_text"), { element: WebElement -> element.clear() })
         val searchCloseBtn = actions(id("search_close_btn"), WebElement::click, "Can't find Search Close Bottom")
         assertThat(searchCloseBtn, should(not(exists())))
     }
@@ -72,9 +74,9 @@ class FirstTest {
     /**
      * Check if webelement is present or not
      */
-    private fun waitForElementNotPresent(id:String, errorMessage:String, timeOut: Long):Boolean {
+    private fun waitForElementNotPresent(by: By, errorMessage: String, timeOut: Long): Boolean {
         val driverWait = WebDriverWait(driver, timeOut).withMessage("$errorMessage\n")
-        return driverWait.until(ExpectedConditions.invisibilityOfElementLocated(By.id(id)))
+        return driverWait.until(ExpectedConditions.invisibilityOfElementLocated(by))
     }
 
     @After
