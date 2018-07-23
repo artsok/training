@@ -4,8 +4,7 @@ package io.github.artsok.training
 import io.appium.java_client.MobileElement
 import io.appium.java_client.android.AndroidDriver
 import org.hamcrest.MatcherAssert.assertThat
-import org.hamcrest.Matchers.equalTo
-import org.hamcrest.Matchers.not
+import org.hamcrest.Matchers.*
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
@@ -84,6 +83,19 @@ class FirstTest {
         val titleElement = actions(id("org.wikipedia:id/view_page_title_text"))
         val articleTitle = titleElement.getAttribute("text")
         assertThat(articleTitle, equalTo("Java (programming language)"))
+    }
+
+    /**
+     * Написать функцию, которая проверяет наличие текста “Search…” в строке поиска перед вводом текста и помечает тест упавшим, если такого текста нет.
+     */
+    @Test
+    fun specialWordShouldExistInSearchInput() {
+        actions(xpath("//*[contains(@text, 'Search Wikipedia')]"),
+                WebElement::click,
+                "Can't find Search Wikipedia input")
+        val searchElement = actions(xpath("//*[contains(@text, 'Search…')]"))
+        assertThat ("Special Word 'Search…' is missed",
+                searchElement.text, should(containsString("Search…")))
     }
 
     /**
