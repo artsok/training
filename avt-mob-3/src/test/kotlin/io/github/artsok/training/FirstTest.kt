@@ -123,14 +123,6 @@ class FirstTest {
         assertThat("Searche list not empty", driver, should(not(canFindElement(id("org.wikipedia:id/search_results_list")))))
     }
 
-    /**
-     * Clear previous searchs
-     */
-    private fun clearRecentSearches() {
-        actions(xpath("//*[contains(@text, 'Search Wikipedia')]"),
-                WebElement::click)
-    }
-
 
     /**
      * Return list of web elements
