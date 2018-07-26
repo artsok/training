@@ -88,3 +88,12 @@ val capabilities = DesiredCapabilities().apply {
     setCapability("noReset", true)
         }
 ```
+
+#### 3. Прокрутка экрана
+Необходимо вычислить координаты относительного нашего экрана, без конкретных значений. В этом нам поможет Dimension
+```kotlin
+val (width, height) = driver.manage().window().size
+val startX = width / 2 //Ширина устройства дели на 2 части и следовательно попадаем в центр
+val startY = (height * 0.80).toInt() //Так мы можем получить начальную точку, которая будет находится в 80% внизу (т.е немного над нижним краем экрана)
+val endY = (height * 0.20).toInt() 
+```
