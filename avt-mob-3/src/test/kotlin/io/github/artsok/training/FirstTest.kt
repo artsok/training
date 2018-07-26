@@ -3,14 +3,21 @@ package io.github.artsok.training
 
 import io.appium.java_client.MobileElement
 import io.appium.java_client.android.AndroidDriver
+import io.appium.java_client.android.AndroidTouchAction
+import io.appium.java_client.touch.offset.ElementOption
+import io.appium.java_client.touch.offset.PointOption
+import org.hamcrest.Description
+import org.hamcrest.Matcher
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.*
+import org.hamcrest.TypeSafeMatcher
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import org.openqa.selenium.By
 import org.openqa.selenium.By.id
 import org.openqa.selenium.By.xpath
+import org.openqa.selenium.Dimension
 import org.openqa.selenium.WebElement
 import org.openqa.selenium.remote.DesiredCapabilities
 import org.openqa.selenium.support.ui.ExpectedConditions
@@ -22,6 +29,8 @@ import ru.yandex.qatools.matchers.webdriver.ExistsMatcher.exists
 import ru.yandex.qatools.matchers.webdriver.driver.CanFindElementMatcher.canFindElement
 import java.io.File
 import java.net.URL
+import kotlin.text.RegexOption.IGNORE_CASE
+
 
 class FirstTest {
 
@@ -38,6 +47,8 @@ class FirstTest {
             setCapability("platformVersion", "8.1")
             setCapability("appPackage", "org.wikipedia")
             setCapability("appActivity", ".main.MainActivity")
+            setCapability("unicodeKeyboard", true)
+            setCapability("resetKeyboard", true)
             setCapability("app", apkFile.absoluteFile) //Можно также ссылкой. Пример: "http://appium.s3.amazonaws.com/TestApp6.0.app.zip"
         }
         driver = AndroidDriver(URL("http://127.0.0.1:4723/wd/hub"), capabilities)
@@ -86,7 +97,8 @@ class FirstTest {
     }
 
     /**
-     * Написать функцию, которая проверяет наличие текста “Search…” в строке поиска перед вводом текста и помечает тест упавшим, если такого текста нет.
+     * Написать функцию, которая проверяет наличие текста “Search…” в строке поиска перед вводом текста
+     * и помечает тест упавшим, если такого текста нет.
      */
     @Test
     fun specialWordShouldExistInSearchInput() {
@@ -94,16 +106,16 @@ class FirstTest {
                 WebElement::click,
                 "Can't find Search Wikipedia input")
         val searchElement = actions(xpath("//*[contains(@text, 'Search…')]"))
-        assertThat ("Special Word 'Search…' is missed",
+        assertThat("Special Word 'Search…' is missed",
                 searchElement.text, should(containsString("Search…")))
     }
 
     /**
      * Написать тест, который:
-        1. Ищет какое-то слово
-        2. Убеждается, что найдено несколько статей
-        3. Отменяет поиск
-        4. Убеждается, что результат поиска пропал
+     * 1. Ищет какое-то слово
+     * 2. Убеждается, что найдено несколько статей
+     * 3. Отменяет поиск
+     * 4. Убеждается, что результат поиска пропал
      */
     @Test
     fun afterCancelSearchesListShouldBeEmpty() {
@@ -123,11 +135,72 @@ class FirstTest {
         assertThat("Searche list not empty", driver, should(not(canFindElement(id("org.wikipedia:id/search_results_list")))))
     }
 
+    /**
+     * Написать тест, который:
+     * Ищет какое-то слово
+     * Убеждается, что в каждом результате поиска есть это слово.
+     */
+    @Test
+    fun resultListShouldContainSpecialWordS() {
+        actions(xpath("//*[contains(@text, 'Search Wikipedia')]"),
+                WebElement::click,
+                "Can't find Search Wikipedia input")
+        actions(xpath("//*[contains(@text, 'Search…')]"),
+                { element: WebElement -> element.sendKeys("Java") })
+        assertThat("Java", should(containsInResultList()))
+    }
+
+    /**
+     * Custom matcher that match special word in each item of result list
+     */
+    private fun containsInResultList(): Matcher<String> {
+        return object : TypeSafeMatcher<String>() {
+            val swipeDepth = 256
+            var errorItem:String =""
+
+            override fun describeTo(description: Description) {
+                description.appendText("Item in Search List must contain 'Java/java'. Item with error '$errorItem'")
+            }
+
+            override fun matchesSafely(value: String): Boolean {
+                repeat(swipeDepth) {
+                    val searchResultsList = getListViewElement(id("org.wikipedia:id/search_results_list"),
+                            id("org.wikipedia:id/page_list_item_title")).forEach {
+
+                        val regex = """\bjava\b""".toRegex(IGNORE_CASE)
+                        if(!regex.containsMatchIn(it.text)) {
+                            errorItem = it.text
+                            return false
+                        }
+                    }
+                    downSwipe()
+                    swipeDepth.dec()
+                }
+                return true
+            }
+        }
+    }
+
+    /**
+     * Down swipe
+     */
+    private fun downSwipe() {
+        val (width, height) = driver.manage().window().size
+        val startX = width / 2
+        val startY = (height * 0.80).toInt()
+        val endX = width / 2
+        val endY = (height * 0.20).toInt()
+        val touchAction = AndroidTouchAction(driver)
+        touchAction.longPress(PointOption<ElementOption>().withCoordinates(startX, startY))
+                .moveTo(PointOption<ElementOption>().withCoordinates(endX, endY))
+                .release().perform()
+    }
+
 
     /**
      * Return list of web elements
      */
-    private fun getListViewElement(listBy: By, listElementBy:By, timeOut:Long = 5) :List<WebElement> {
+    private fun getListViewElement(listBy: By, listElementBy: By, timeOut: Long = 5): List<WebElement> {
         val listView = WebDriverWait(driver, timeOut).until(ExpectedConditions.presenceOfElementLocated(listBy))
         return listView.findElements<WebElement>(listElementBy);
     }
@@ -158,3 +231,18 @@ class FirstTest {
         }
     }
 }
+
+/**
+ * MultiDeclaration for Dimension
+ */
+private operator fun Dimension.component1(): Int {
+    return this.width
+}
+
+private operator fun Dimension.component2(): Int {
+    return this.height
+}
+
+
+
+
