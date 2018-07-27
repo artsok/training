@@ -95,5 +95,14 @@ val capabilities = DesiredCapabilities().apply {
 val (width, height) = driver.manage().window().size
 val startX = width / 2 //Ширина устройства дели на 2 части и следовательно попадаем в центр
 val startY = (height * 0.80).toInt() //Так мы можем получить начальную точку, которая будет находится в 80% внизу (т.е немного над нижним краем экрана)
-val endY = (height * 0.20).toInt() 
+val endX = width / 2 //Одинаковая как startX, так как прокручиваем 'SWIPE DOWN'
+val endY = (height * 0.20).toInt() //Точка до которой прокручиваем
+```
+Нажимаем внизу экрана и передвигаемся наверх с определенным timeout. Чем дольше timeout, тем медленее swipe.  
+```kotlin
+  val touchAction = AndroidTouchAction(driver)
+        touchAction.press(PointOption<ElementOption>().withCoordinates(startX, startY))
+                .waitAction(waitOptions(ofSeconds(waitSeconds)))
+                .moveTo(PointOption<ElementOption>().withCoordinates(endX, endY))
+                .release().perform()
 ```
