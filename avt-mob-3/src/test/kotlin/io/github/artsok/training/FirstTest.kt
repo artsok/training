@@ -64,7 +64,7 @@ class FirstTest {
         actions(xpath("//*[contains(@text, 'Search…')]"),
                 { element: WebElement -> element.sendKeys("Java") })
         assertThat(driver, decorateMatcherWithWaiter(
-                canFindElement(By.xpath("//*[@resource-id='org.wikipedia:id/page_list_item_container']" +
+                canFindElement(xpath("//*[@resource-id='org.wikipedia:id/page_list_item_container']" +
                         "//*[contains(@text, 'Object-oriented programming language')]")), timeoutHasExpired(5000L)))
     }
 
@@ -165,13 +165,11 @@ class FirstTest {
         actions(xpath("//*[contains(@text, 'Search Wikipedia')]"),
                 WebElement::click)
         actions(xpath("//*[contains(@text, 'Search…')]"),
-                { element: WebElement -> element.sendKeys("Java") })
-        actions(xpath("//*[@resource-id='org.wikipedia:id/page_list_item_container']//*[contains(@text, 'Object-oriented programming language')]"),
+                { element: WebElement -> element.sendKeys("Appium") })
+        actions(xpath("//*[@resource-id='org.wikipedia:id/page_list_item_title'][contains(@text, 'Appium')]"),
                 WebElement::click)
         actions(id("org.wikipedia:id/view_page_title_text"))
-        repeat(2) {
-            downSwipe()
-        }
+        swipeToElement(xpath("//*[@text='View page in browser']"), 12, "Cannot find the end of the article")
     }
 
 
@@ -180,7 +178,7 @@ class FirstTest {
      */
     private fun containsInResultList(): Matcher<String> {
         return object : TypeSafeMatcher<String>() {
-            val swipeDepth = 256
+            var swipeDepth = 256
             var errorItem: String = ""
 
             override fun describeTo(description: Description) {
@@ -198,8 +196,8 @@ class FirstTest {
                             return false
                         }
                     }
-                    downSwipe()
-                    swipeDepth.dec()
+                    swipeDown()
+                    swipeDepth = swipeDepth.dec()
                 }
                 return true
             }
@@ -209,7 +207,7 @@ class FirstTest {
     /**
      * Down swipe
      */
-    private fun downSwipe(waitSeconds: Long = 3) {
+    private fun swipeDown(waitSeconds: Long = 3) {
         val (width, height) = driver.manage().window().size
         val startX = width / 2
         val startY = (height * 0.80).toInt()
@@ -220,8 +218,22 @@ class FirstTest {
                 .waitAction(waitOptions(ofSeconds(waitSeconds)))
                 .moveTo(PointOption<ElementOption>().withCoordinates(endX, endY))
                 .release().perform()
+    }
 
-
+    /**
+     * Down swipe to element
+     */
+    private fun swipeToElement(by:By, depthOfSwiped:Int = 10, errorMassage: String = "error") {
+        var alreadySwiped = 0
+        while (driver.findElements(by).size == 0) {
+            if(alreadySwiped > depthOfSwiped) {
+                actions(by, null, "Cannot find element by swipping up '$errorMassage'")
+                return
+            }
+            swipeDown(0)
+            alreadySwiped = alreadySwiped.inc()
+            println(alreadySwiped)
+        }
     }
 
 
