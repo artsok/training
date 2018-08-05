@@ -299,9 +299,6 @@ class MobileTest {
                 { it.sendKeys(firstArticleName) })
         actions(xpath("//*[@resource-id='org.wikipedia:id/page_list_item_container']//*[contains(@text, 'Island of Indonesia')]"),
                 WebElement::click)
-
-        val firstArticleTitle = waitForElementAndGetAttribute(id("org.wikipedia:id/view_page_title_text"), attribute = "text")
-
         actions(xpath("//*[@content-desc='More options']"), WebElement::click)
         actions(xpath("//android.widget.ListView"))
         actions(xpath("//*[@text='Add to reading list']"), WebElement::click,
@@ -315,8 +312,6 @@ class MobileTest {
         actions(xpath("//*[@text='OK']"), WebElement::click, "Cannot press 'OK' button ")
         actions(xpath("//android.widget.ImageButton[@content-desc='Navigate up']"), WebElement::click,
                 "Cannot close article, cannot find X link")
-
-
         actions(xpath("//*[contains(@text, 'Search Wikipedia')]"),
                 WebElement::click)
         actions(xpath("//*[contains(@text, 'Search…')]"),
@@ -359,7 +354,35 @@ class MobileTest {
         assertThat("Title of article not same",secondArticleTitle, should(equalTo(currentTitle)))
     }
 
+    /**
+     * Ex6: Тест: assert title
+     *
+     * Написать тест, который открывает статью и убеждается, что у нее есть элемент title.
+     * Важно: тест не должен дожидаться появления title, проверка должна производиться сразу.
+     * Если title не найден - тест падает с ошибкой. Метод можно назвать assertElementPresent.
+     */
+    @Test
+    fun articleShouldHaveTitleWithQuickFind() {
+        val searchLine = "Java"
+        actions(xpath("//*[contains(@text, 'Search Wikipedia')]"),
+                WebElement::click)
+        actions(xpath("//*[contains(@text, 'Search…')]"),
+                { it.sendKeys(searchLine) })
+        actions(xpath("//*[@resource-id='org.wikipedia:id/page_list_item_container']//*[contains(@text, 'Island of Indonesia')]"),
+                WebElement::click)
+        assertElementPresent(id("org.wikipedia:id/view_page_title_text"), "Article doesn't have title")
+    }
 
+
+    /**
+     * Check that element present
+     */
+    private fun assertElementPresent(by:By, errorMassage: String) {
+        val element = driver.findElements(by)
+        if(element.isEmpty()){
+            throw AssertionError("An element '$by' supposed to be present. $errorMassage")
+        }
+    }
 
 
     /**
