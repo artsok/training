@@ -220,8 +220,21 @@ class MobileTest {
                 { element: WebElement -> element.sendKeys(searchLine) })
         val searchResultsList = getListViewElement(id("org.wikipedia:id/search_results_list"),
                 id("org.wikipedia:id/page_list_item_container"))
-
         assertTrue(searchResultsList.isNotEmpty(), "We found too few results")
+    }
+
+    @Test
+    fun amountOfArticleSearchShouldBeEmpty() {
+        val searchLine = ('a'..'z').randomString(6)
+        actions(xpath("//*[contains(@text, 'Search Wikipedia')]"),
+                WebElement::click)
+        actions(xpath("//*[contains(@text, 'Search…')]"),
+                { element: WebElement -> element.sendKeys(searchLine) })
+        actions(xpath("//*[@resource-id='org.wikipedia:id/search_empty_text']"),
+                errorMassage = "Cannot find empty result label by request $searchLine")
+
+        val searchResultLocator = "//*[@resource-id='org.wikipedia:id/search_results_list']/*[@resource-id='org.wikipedia:id/page_list_item_container']"
+        assertThat("We've found some results by request $searchLine", driver, should(not(canFindElement(xpath(searchResultLocator)))))
     }
 
 
