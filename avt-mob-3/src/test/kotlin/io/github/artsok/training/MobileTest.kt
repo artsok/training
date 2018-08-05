@@ -32,6 +32,7 @@ import java.io.File
 import java.net.URL
 import java.time.Duration.ofMillis
 import java.time.Duration.ofSeconds
+import kotlin.test.assertTrue
 import kotlin.text.RegexOption.IGNORE_CASE
 
 
@@ -199,7 +200,7 @@ class MobileTest {
         actions(id("org.wikipedia:id/onboarding_button"), WebElement::click, "Cannot find 'Got it' tip overlay'")
         actions(id("org.wikipedia:id/text_input"), WebElement::clear, "Cannot find input to set name of articles folder")
         actions(id("org.wikipedia:id/text_input"),
-                { webElement -> webElement.sendKeys("Learning programing")},
+                { webElement -> webElement.sendKeys("Learning programing") },
                 "Cannot put text into articles folder input")
 
         actions(xpath("//*[@text='OK']"), WebElement::click, "Cannot press 'OK' button ")
@@ -208,6 +209,19 @@ class MobileTest {
         actions(xpath("//*[@text='Learning programing']"), WebElement::click, "Cannot find created folder")
         swipeElementToLeft(xpath("//*[@text='Appium']"), "Cannot find saved article")
         assertThat("Cannot delete saved article", driver, should(not(canFindElement(xpath("//*[@text='Appium']")))))
+    }
+
+    @Test
+    fun amountOfArticleSearchShouldNotBeEmpty() {
+        val searchLine = "Linkin Park Diskography"
+        actions(xpath("//*[contains(@text, 'Search Wikipedia')]"),
+                WebElement::click)
+        actions(xpath("//*[contains(@text, 'Search…')]"),
+                { element: WebElement -> element.sendKeys(searchLine) })
+        val searchResultsList = getListViewElement(id("org.wikipedia:id/search_results_list"),
+                id("org.wikipedia:id/page_list_item_container"))
+
+        assertTrue(searchResultsList.isNotEmpty(), "We found too few results")
     }
 
 
@@ -255,7 +269,7 @@ class MobileTest {
         val rightX = leftX + webElement.size.width //Берем ранее найденную точку элемента 'leftX', берем размер нашего элемента по ширине и прибавляем к нашей точке 'leftX'. Получаем точку которая находится у правой границы экрана
         val upperY = webElement.location.y
         val lowerY = upperY + webElement.size.height
-        val middleY = (upperY + lowerY)/ 2 //Таким образом получаем самую верхнию точку нашего элемента, самую нижнию, складываем их, делим на два и получаем середину нашего элемента по оси Y
+        val middleY = (upperY + lowerY) / 2 //Таким образом получаем самую верхнию точку нашего элемента, самую нижнию, складываем их, делим на два и получаем середину нашего элемента по оси Y
 
         val touchAction = AndroidTouchAction(driver)
         touchAction
