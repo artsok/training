@@ -276,6 +276,92 @@ class MobileTest {
     }
 
 
+
+
+    /**
+     * Ex5: Тест: сохранение двух статей
+     *
+     * Написать тест, который:
+     * 1. Сохраняет две статьи в одну папку
+     * 2. Удаляет одну из статей
+     * 3. Убеждается, что вторая осталась
+     * 4. Переходит в неё и убеждается, что title совпадает
+     */
+    @Test
+    fun twoArticleShouldBeSavedToList() {
+        val firstArticleName = "Java"
+        val secondArticleName = "Kotlin"
+        val nameOfArticlesList = "My favorite list"
+
+        actions(xpath("//*[contains(@text, 'Search Wikipedia')]"),
+                WebElement::click)
+        actions(xpath("//*[contains(@text, 'Search…')]"),
+                { it.sendKeys(firstArticleName) })
+        actions(xpath("//*[@resource-id='org.wikipedia:id/page_list_item_container']//*[contains(@text, 'Island of Indonesia')]"),
+                WebElement::click)
+
+        val firstArticleTitle = waitForElementAndGetAttribute(id("org.wikipedia:id/view_page_title_text"), attribute = "text")
+
+        actions(xpath("//*[@content-desc='More options']"), WebElement::click)
+        actions(xpath("//android.widget.ListView"))
+        actions(xpath("//*[@text='Add to reading list']"), WebElement::click,
+                "Cannot find option to add article to reading list")
+        actions(id("org.wikipedia:id/onboarding_button"), WebElement::click,
+                "Cannot find 'Got it' tip overlay'")
+        actions(id("org.wikipedia:id/text_input"), WebElement::clear,
+                "Cannot find input to set name of articles folder")
+        actions(id("org.wikipedia:id/text_input"), { it.sendKeys(nameOfArticlesList) },
+                "Cannot put text into articles folder input")
+        actions(xpath("//*[@text='OK']"), WebElement::click, "Cannot press 'OK' button ")
+        actions(xpath("//android.widget.ImageButton[@content-desc='Navigate up']"), WebElement::click,
+                "Cannot close article, cannot find X link")
+
+
+        actions(xpath("//*[contains(@text, 'Search Wikipedia')]"),
+                WebElement::click)
+        actions(xpath("//*[contains(@text, 'Search…')]"),
+                { it.sendKeys(secondArticleName) })
+        actions(xpath("//*[@resource-id='org.wikipedia:id/page_list_item_container']//*[contains(@text, 'Programming language')]"),
+                WebElement::click)
+
+        val secondArticleTitle = waitForElementAndGetAttribute(id("org.wikipedia:id/view_page_title_text"), attribute = "text")
+
+        actions(xpath("//*[@content-desc='More options']"), WebElement::click)
+        actions(xpath("//android.widget.ListView"))
+        actions(xpath("//*[@text='Add to reading list']"), WebElement::click,
+                "Cannot find option to add article to reading list")
+        actions(xpath("//*[@resource-id='org.wikipedia:id/lists_container']"))
+        actions(xpath("//*[@text='$nameOfArticlesList']"), WebElement::click,
+                "Cannot find option to add article to reading list")
+        actions(xpath("//android.widget.ImageButton[@content-desc='Navigate up']"), WebElement::click,
+                "Cannot close article, cannot find X link")
+        actions(xpath("//android.widget.FrameLayout[@content-desc='My lists']"), WebElement::click,
+                "Cannot find navigation button to My lists")
+        actions(xpath("//*[@text='$nameOfArticlesList']"), WebElement::click,
+                "Cannot find created folder")
+
+        var savedArticleList = getListViewElement(xpath("//android.widget.ScrollView"),
+                id("org.wikipedia:id/page_list_item_description"))
+
+        assertThat(savedArticleList.size, equalTo(2))
+
+        swipeElementToLeft(xpath("//*[@text='Java']"), "Cannot find saved article")
+        savedArticleList = getListViewElement(xpath("//android.widget.ScrollView"),
+                id("org.wikipedia:id/page_list_item_description"))
+
+        assertThat(savedArticleList.size, equalTo(1))
+        assertThat("Cannot find article in saved list",
+                driver, should(canFindElement(xpath("//*[@text='Kotlin (programming language)']"))))
+
+        actions(xpath("//*[@text='Kotlin (programming language)']"), WebElement::click)
+        val currentTitle = waitForElementAndGetAttribute(id("org.wikipedia:id/view_page_title_text"), attribute = "text", errorMassage = "Cannot find title of article")
+
+        assertThat("Title of article not same",secondArticleTitle, should(equalTo(currentTitle)))
+    }
+
+
+
+
     /**
      * Custom matcher that match special word in each item of result list
      */
@@ -398,7 +484,7 @@ class MobileTest {
     /**
      * Search element by and get attribute
      */
-    private fun waitForElementAndGetAttribute(by: By, attribute: String, errorMassage: String, timeOut: Long = 5): String {
+    private fun waitForElementAndGetAttribute(by: By, attribute: String, errorMassage: String = "Error in waitForElementAndGetAttribute", timeOut: Long = 5): String {
         val element = actions(by, errorMassage = errorMassage, timeOut = timeOut)
         return element.getAttribute(attribute)
     }
