@@ -106,3 +106,22 @@ val endY = (height * 0.20).toInt() //Точка до которой прокру
                 .moveTo(PointOption<ElementOption>().withCoordinates(endX, endY))
                 .release().perform()
 ```
+
+#### 4. Возможность перезапустить приложение без сброса настроек в Appium
+```java
+driver.closeApp();
+try{driver.runAppInBackground(1);}catch (Exception e) {}
+```
+
+#### 5. Appium Capabilities
+http://appium.io/docs/en/writing-running-appium/caps/
+
+#### 6. Debug тестов в IDE
+Чтобы сессия не отваливалась при отладке, требуется установить данное свойство.
+```kotlin
+setCapability("newCommandTimeout", 6000 * 5);
+```
+
+#### 7. Ошибки, которые встретились при обучении
+https://stackoverflow.com/questions/32533063/sendkey-method-in-appium-sometime-triggers-a-paste-as-well
+https://github.com/appium/appium/issues/9684

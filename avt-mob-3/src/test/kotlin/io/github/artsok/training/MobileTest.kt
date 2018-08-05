@@ -30,11 +30,12 @@ import ru.yandex.qatools.matchers.webdriver.ExistsMatcher.exists
 import ru.yandex.qatools.matchers.webdriver.driver.CanFindElementMatcher.canFindElement
 import java.io.File
 import java.net.URL
+import java.time.Duration.ofMillis
 import java.time.Duration.ofSeconds
 import kotlin.text.RegexOption.IGNORE_CASE
 
 
-class FirstTest {
+class MobileTest {
 
     lateinit var apkFile: File
     lateinit var driver: AndroidDriver<MobileElement>
@@ -51,7 +52,9 @@ class FirstTest {
             setCapability("appActivity", ".main.MainActivity")
             setCapability("unicodeKeyboard", true)
             setCapability("resetKeyboard", true)
+            setCapability("newCommandTimeout", 600 * 5);
             setCapability("app", apkFile.absoluteFile) //Можно также ссылкой. Пример: "http://appium.s3.amazonaws.com/TestApp6.0.app.zip"
+            setCapability("automationName", "UiAutomator2")
         }
         driver = AndroidDriver(URL("http://127.0.0.1:4723/wd/hub"), capabilities)
     }
@@ -157,9 +160,6 @@ class FirstTest {
      * III. Сложные тесты
      */
 
-    /**
-     * 1. Swipe: start_x, Touch action, dimensions
-     */
     @Test
     fun articleShouldBeWithSwipeAction() {
         actions(xpath("//*[contains(@text, 'Search Wikipedia')]"),
@@ -170,6 +170,44 @@ class FirstTest {
                 WebElement::click)
         actions(id("org.wikipedia:id/view_page_title_text"))
         swipeToElement(xpath("//*[@text='View page in browser']"), 12, "Cannot find the end of the article")
+    }
+
+    /**
+     * 1. Запустить приложение
+     * 2. Ввести название слова в поиск
+     * 3. Выбрать статью
+     * 4. Открыть меню нажав кнопкой 'more options' и нажать кнопку 'Add to reading list'. Далее клик по Overlay
+     * 5. Создать новый список
+     * 6. Перейти в свои списки
+     * 7. Выбрать один из списков
+     * 8. Убедиться, что тут присутсвуте нужная нам статья
+     * 9. Удалить статью
+     * 10. Проверить, что статья удалена
+     */
+    @Test
+    fun articleShouldBeSavedToMyList() {
+        actions(xpath("//*[contains(@text, 'Search Wikipedia')]"),
+                WebElement::click)
+        actions(xpath("//*[contains(@text, 'Search…')]"),
+                { element: WebElement -> element.sendKeys("Appium") })
+        actions(xpath("//*[@resource-id='org.wikipedia:id/page_list_item_title'][contains(@text, 'Appium')]"),
+                WebElement::click)
+        actions(id("org.wikipedia:id/view_page_title_text"))
+        actions(xpath("//*[@content-desc='More options']"), WebElement::click)
+        actions(xpath("//android.widget.ListView"))
+        actions(xpath("//*[@text='Add to reading list']"), WebElement::click, "Cannot find option to add article to reading list")
+        actions(id("org.wikipedia:id/onboarding_button"), WebElement::click, "Cannot find 'Got it' tip overlay'")
+        actions(id("org.wikipedia:id/text_input"), WebElement::clear, "Cannot find input to set name of articles folder")
+        actions(id("org.wikipedia:id/text_input"),
+                { webElement -> webElement.sendKeys("Learning programing")},
+                "Cannot put text into articles folder input")
+
+        actions(xpath("//*[@text='OK']"), WebElement::click, "Cannot press 'OK' button ")
+        actions(xpath("//android.widget.ImageButton[@content-desc='Navigate up']"), WebElement::click, "Cannot close article, cannot find X link")
+        actions(xpath("//android.widget.FrameLayout[@content-desc='My lists']"), WebElement::click, "Cannot find navigation button to My lists")
+        actions(xpath("//*[@text='Learning programing']"), WebElement::click, "Cannot find created folder")
+        swipeElementToLeft(xpath("//*[@text='Appium']"), "Cannot find saved article")
+        assertThat("Cannot delete saved article", driver, should(not(canFindElement(xpath("//*[@text='Appium']")))))
     }
 
 
@@ -205,6 +243,31 @@ class FirstTest {
     }
 
     /**
+     * Swipe Left
+     */
+    private fun swipeElementToLeft(by: By, errorMassage: String) {
+        val webElement = actions(by, errorMassage = errorMassage)
+        //1. Нужно обнаружить этот элемент
+        //2. Установить его место положения по осям х и у
+        //3. Далее передвинуть его по оси Х справа на лева
+        //4. По оси y движение происходить не будет
+        val leftX = webElement.location.x //Запишим самую левую точку элемента по оси Х
+        val rightX = leftX + webElement.size.width //Берем ранее найденную точку элемента 'leftX', берем размер нашего элемента по ширине и прибавляем к нашей точке 'leftX'. Получаем точку которая находится у правой границы экрана
+        val upperY = webElement.location.y
+        val lowerY = upperY + webElement.size.height
+        val middleY = (upperY + lowerY)/ 2 //Таким образом получаем самую верхнию точку нашего элемента, самую нижнию, складываем их, делим на два и получаем середину нашего элемента по оси Y
+
+        val touchAction = AndroidTouchAction(driver)
+        touchAction
+                .press(PointOption<ElementOption>().withCoordinates(rightX, middleY))
+                .waitAction(waitOptions(ofMillis(300)))
+                .moveTo(PointOption<ElementOption>().withCoordinates(leftX, middleY))
+                .release()
+                .perform()
+
+    }
+
+    /**
      * Down swipe
      */
     private fun swipeDown(waitSeconds: Long = 3) {
@@ -214,20 +277,22 @@ class FirstTest {
         val endX = width / 2
         val endY = (height * 0.20).toInt()
         val touchAction = AndroidTouchAction(driver)
-        touchAction.press(PointOption<ElementOption>().withCoordinates(startX, startY))
+        touchAction
+                .press(PointOption<ElementOption>().withCoordinates(startX, startY))
                 .waitAction(waitOptions(ofSeconds(waitSeconds)))
                 .moveTo(PointOption<ElementOption>().withCoordinates(endX, endY))
-                .release().perform()
+                .release()
+                .perform()
     }
 
     /**
      * Down swipe to element
      */
-    private fun swipeToElement(by:By, depthOfSwiped:Int = 10, errorMassage: String = "error") {
+    private fun swipeToElement(by: By, depthOfSwiped: Int = 10, errorMassage: String = "error") {
         var alreadySwiped = 0
         while (driver.findElements(by).size == 0) {
-            if(alreadySwiped > depthOfSwiped) {
-                actions(by, null, "Cannot find element by swipping up '$errorMassage'")
+            if (alreadySwiped > depthOfSwiped) {
+                actions(by, errorMassage = "Cannot find element by swipping up '$errorMassage'")
                 return
             }
             swipeDown(0)
