@@ -260,6 +260,21 @@ class MobileTest {
         assertThat("Article title have been changed after screen rotation", titleBeforeRotation, equalTo(titleAfterSecondRotation))
     }
 
+    @Test
+    fun searchArticleShouldBeAvailableAfterBackground() {
+        val searchLine = "Java"
+        actions(xpath("//*[contains(@text, 'Search Wikipedia')]"),
+                WebElement::click)
+        actions(xpath("//*[contains(@text, 'Search…')]"),
+                { element: WebElement -> element.sendKeys(searchLine) })
+        actions(xpath("//*[@resource-id='org.wikipedia:id/page_list_item_container']//*[contains(@text, 'Object-oriented programming language')]"),
+                errorMassage = "Can't find element with text 'Object-oriented programming language' topic searching by $searchLine")
+        driver.runAppInBackground(ofSeconds(3))
+
+        assertThat("Cannot find article after returning from background",
+                driver, should(canFindElement(xpath("//*[@resource-id='org.wikipedia:id/page_list_item_container']//*[contains(@text, 'Object-oriented programming language')]"))))
+    }
+
 
     /**
      * Custom matcher that match special word in each item of result list
@@ -383,7 +398,7 @@ class MobileTest {
     /**
      * Search element by and get attribute
      */
-    private fun waitForElementAndGetAttribute(by: By, attribute: String, errorMassage: String, timeOut: Long = 5):String {
+    private fun waitForElementAndGetAttribute(by: By, attribute: String, errorMassage: String, timeOut: Long = 5): String {
         val element = actions(by, errorMassage = errorMassage, timeOut = timeOut)
         return element.getAttribute(attribute)
     }

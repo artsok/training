@@ -127,9 +127,17 @@ setCapability("newCommandTimeout", 6000 * 5)
 ```kotlin
 driver.rotate(ScreenOrientation.LANDSCAPE)
 driver.rotate(ScreenOrientation.PORTRAIT)
-`````
-Если одна и ротаций не пройдет, то Appium самостоятельно  выдаст ошибку. Она будет выдана вкачестве Exception. 
+```
+Если одна и ротаций не пройдет, то Appium самостоятельно  выдаст ошибку. Она будет выдана вкачестве Exception.
 
-#### 7. Ошибки, которые встретились при обучении
+#### 8. Background
+В тестировании мобильных приложений очень часто возникают проблемы с различными состояниями приложения после ухода в background
+и возвращения оттуда. Их тоже надо тестировать, в том числе и автоматически.   
+```kotlin
+driver.runAppInBackground(ofSeconds(3))
+```
+Выставляем время, в течение которого приложение будет в background. После этого приложение автоматически развернется
+
+#### 9. Ошибки, которые встретились при обучении
 https://stackoverflow.com/questions/32533063/sendkey-method-in-appium-sometime-triggers-a-paste-as-well
 https://github.com/appium/appium/issues/9684
