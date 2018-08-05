@@ -19,6 +19,7 @@ import org.openqa.selenium.By
 import org.openqa.selenium.By.id
 import org.openqa.selenium.By.xpath
 import org.openqa.selenium.Dimension
+import org.openqa.selenium.ScreenOrientation
 import org.openqa.selenium.WebElement
 import org.openqa.selenium.remote.DesiredCapabilities
 import org.openqa.selenium.support.ui.ExpectedConditions
@@ -202,7 +203,6 @@ class MobileTest {
         actions(id("org.wikipedia:id/text_input"),
                 { webElement -> webElement.sendKeys("Learning programing") },
                 "Cannot put text into articles folder input")
-
         actions(xpath("//*[@text='OK']"), WebElement::click, "Cannot press 'OK' button ")
         actions(xpath("//android.widget.ImageButton[@content-desc='Navigate up']"), WebElement::click, "Cannot close article, cannot find X link")
         actions(xpath("//android.widget.FrameLayout[@content-desc='My lists']"), WebElement::click, "Cannot find navigation button to My lists")
@@ -235,6 +235,29 @@ class MobileTest {
 
         val searchResultLocator = "//*[@resource-id='org.wikipedia:id/search_results_list']/*[@resource-id='org.wikipedia:id/page_list_item_container']"
         assertThat("We've found some results by request $searchLine", driver, should(not(canFindElement(xpath(searchResultLocator)))))
+    }
+
+
+    @Test
+    fun articleShouldNotBeRenameAfterChangeScreenOrientationOnSearchResults() {
+        val searchLine = "Java"
+        actions(xpath("//*[contains(@text, 'Search Wikipedia')]"),
+                WebElement::click)
+        actions(xpath("//*[contains(@text, 'Search…')]"),
+                { element: WebElement -> element.sendKeys(searchLine) })
+        actions(xpath("//*[@resource-id='org.wikipedia:id/page_list_item_container']//*[contains(@text, 'Object-oriented programming language')]"),
+                WebElement::click, "Can't find element with text 'Object-oriented programming language' topic searching by $searchLine")
+
+        val titleBeforeRotation = waitForElementAndGetAttribute(id("org.wikipedia:id/view_page_title_text"), attribute = "text", errorMassage = "Cannot find title of article")
+        driver.rotate(ScreenOrientation.LANDSCAPE)
+        val titleAfterRotation = waitForElementAndGetAttribute(id("org.wikipedia:id/view_page_title_text"), attribute = "text", errorMassage = "Cannot find title of article")
+
+        assertThat("Article title have been changed after screen rotation", titleBeforeRotation, equalTo(titleAfterRotation))
+
+        driver.rotate(ScreenOrientation.PORTRAIT)
+        val titleAfterSecondRotation = waitForElementAndGetAttribute(id("org.wikipedia:id/view_page_title_text"), attribute = "text", errorMassage = "Cannot find title of article")
+
+        assertThat("Article title have been changed after screen rotation", titleBeforeRotation, equalTo(titleAfterSecondRotation))
     }
 
 
@@ -348,12 +371,21 @@ class MobileTest {
         return element
     }
 
+
     /**
      * Check if web element is present or not
      */
     private fun waitForElementNotPresent(by: By, errorMessage: String, timeOut: Long): Boolean {
         val driverWait = WebDriverWait(driver, timeOut).withMessage("$errorMessage\n")
         return driverWait.until(ExpectedConditions.invisibilityOfElementLocated(by))
+    }
+
+    /**
+     * Search element by and get attribute
+     */
+    private fun waitForElementAndGetAttribute(by: By, attribute: String, errorMassage: String, timeOut: Long = 5):String {
+        val element = actions(by, errorMassage = errorMassage, timeOut = timeOut)
+        return element.getAttribute(attribute)
     }
 
     @After

@@ -61,13 +61,11 @@
             <groupId>ru.yandex.qatools.matchers</groupId>
             <artifactId>webdriver-matchers</artifactId>
             <version>1.4.1</version>
-            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>ru.yandex.qatools.matchers</groupId>
             <artifactId>matcher-decorators</artifactId>
             <version>1.4.1</version>
-            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.hamcrest</groupId>
@@ -80,7 +78,6 @@
             <groupId>io.appium</groupId>
             <artifactId>java-client</artifactId>
             <version>${appium.version}</version>
-            <scope>test</scope>
         </dependency>
     </dependencies>
     <!-- Для компиляции Kotlin -->

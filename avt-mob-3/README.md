@@ -119,8 +119,16 @@ http://appium.io/docs/en/writing-running-appium/caps/
 #### 6. Debug тестов в IDE
 Чтобы сессия не отваливалась при отладке, требуется установить данное свойство.
 ```kotlin
-setCapability("newCommandTimeout", 6000 * 5);
+setCapability("newCommandTimeout", 6000 * 5)
 ```
+
+#### 7. Rotation (Поворот)
+У экрана есть две главной ориентации, портретная и альбомная (ландшафтная = экран повернут на 90 градусов)
+```kotlin
+driver.rotate(ScreenOrientation.LANDSCAPE)
+driver.rotate(ScreenOrientation.PORTRAIT)
+`````
+Если одна и ротаций не пройдет, то Appium самостоятельно  выдаст ошибку. Она будет выдана вкачестве Exception. 
 
 #### 7. Ошибки, которые встретились при обучении
 https://stackoverflow.com/questions/32533063/sendkey-method-in-appium-sometime-triggers-a-paste-as-well
