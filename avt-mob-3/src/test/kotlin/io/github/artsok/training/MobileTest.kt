@@ -7,21 +7,24 @@ import io.appium.java_client.android.AndroidTouchAction
 import io.appium.java_client.touch.WaitOptions.waitOptions
 import io.appium.java_client.touch.offset.ElementOption
 import io.appium.java_client.touch.offset.PointOption
+import io.github.artsok.training.rules.DriverRule
+import io.github.artsok.training.rules.RotateRule
 import org.hamcrest.Description
 import org.hamcrest.Matcher
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.*
 import org.hamcrest.TypeSafeMatcher
-import org.junit.After
-import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
+import org.junit.rules.ExternalResource
+import org.junit.rules.RuleChain
+import org.junit.rules.TestRule
 import org.openqa.selenium.By
 import org.openqa.selenium.By.id
 import org.openqa.selenium.By.xpath
 import org.openqa.selenium.Dimension
 import org.openqa.selenium.ScreenOrientation
 import org.openqa.selenium.WebElement
-import org.openqa.selenium.remote.DesiredCapabilities
 import org.openqa.selenium.support.ui.ExpectedConditions
 import org.openqa.selenium.support.ui.WebDriverWait
 import ru.yandex.qatools.matchers.decorators.MatcherDecorators.should
@@ -30,36 +33,36 @@ import ru.yandex.qatools.matchers.decorators.WaiterMatcherDecorator.decorateMatc
 import ru.yandex.qatools.matchers.webdriver.ExistsMatcher.exists
 import ru.yandex.qatools.matchers.webdriver.driver.CanFindElementMatcher.canFindElement
 import java.io.File
-import java.net.URL
 import java.time.Duration.ofMillis
 import java.time.Duration.ofSeconds
 import kotlin.test.assertTrue
 import kotlin.text.RegexOption.IGNORE_CASE
 
 
+
+
 class MobileTest {
 
-    lateinit var apkFile: File
-    lateinit var driver: AndroidDriver<MobileElement>
+    private var apkFile: File = File(this.javaClass.getResource("/apk/org.wikipedia.apk").file)
+    private lateinit var driver: AndroidDriver<MobileElement>
 
-    @Before
-    fun setUp() {
-        apkFile = File(this.javaClass.getResource("/apk/org.wikipedia.apk").file)
-
-        val capabilities = DesiredCapabilities().apply {
-            setCapability("platformName", "Android")
-            setCapability("deviceName", "Nexus 6P API 27")
-            setCapability("platformVersion", "8.1")
-            setCapability("appPackage", "org.wikipedia")
-            setCapability("appActivity", ".main.MainActivity")
-            setCapability("unicodeKeyboard", true)
-            setCapability("resetKeyboard", true)
-            setCapability("newCommandTimeout", 600 * 5);
-            setCapability("app", apkFile.absoluteFile) //Можно также ссылкой. Пример: "http://appium.s3.amazonaws.com/TestApp6.0.app.zip"
-            setCapability("automationName", "UiAutomator2")
+    private val driverRule = DriverRule(apkFile)
+    private val rotateRule = RotateRule()
+    private val extractDriver = object : ExternalResource() {
+        override fun before() {
+            println("extractDriver - Start")
+            driver = driverRule.getDriver()
         }
-        driver = AndroidDriver(URL("http://127.0.0.1:4723/wd/hub"), capabilities)
     }
+
+    @Rule
+    @JvmField
+    val chain: TestRule = RuleChain
+            .outerRule(driverRule)
+            .around(extractDriver)
+            .around(rotateRule)
+
+
 
     @Test
     fun shouldFindSpecialWordInSearchResultList() {
@@ -161,7 +164,6 @@ class MobileTest {
     /**
      * III. Сложные тесты
      */
-
     @Test
     fun articleShouldBeWithSwipeAction() {
         actions(xpath("//*[contains(@text, 'Search Wikipedia')]"),
@@ -271,11 +273,10 @@ class MobileTest {
                 errorMassage = "Can't find element with text 'Object-oriented programming language' topic searching by $searchLine")
         driver.runAppInBackground(ofSeconds(3))
 
+
         assertThat("Cannot find article after returning from background",
                 driver, should(canFindElement(xpath("//*[@resource-id='org.wikipedia:id/page_list_item_container']//*[contains(@text, 'Object-oriented programming language')]"))))
     }
-
-
 
 
     /**
@@ -351,7 +352,7 @@ class MobileTest {
         actions(xpath("//*[@text='Kotlin (programming language)']"), WebElement::click)
         val currentTitle = waitForElementAndGetAttribute(id("org.wikipedia:id/view_page_title_text"), attribute = "text", errorMassage = "Cannot find title of article")
 
-        assertThat("Title of article not same",secondArticleTitle, should(equalTo(currentTitle)))
+        assertThat("Title of article not same", secondArticleTitle, should(equalTo(currentTitle)))
     }
 
     /**
@@ -377,9 +378,9 @@ class MobileTest {
     /**
      * Check that element present
      */
-    private fun assertElementPresent(by:By, errorMassage: String) {
+    private fun assertElementPresent(by: By, errorMassage: String) {
         val element = driver.findElements(by)
-        if(element.isEmpty()){
+        if (element.isEmpty()) {
             throw AssertionError("An element '$by' supposed to be present. $errorMassage")
         }
     }
@@ -512,12 +513,12 @@ class MobileTest {
         return element.getAttribute(attribute)
     }
 
-    @After
-    fun tearDown() {
-        if (driver != null) {
-            driver.quit()
-        }
-    }
+//    @After
+//    fun tearDown() {
+//        if (driver != null) {
+//            driver.quit()
+//        }
+//    }
 }
 
 /**
