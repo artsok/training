@@ -7,15 +7,20 @@ import io.appium.java_client.pagefactory.AndroidFindBy
 
 class SearchPage(driver: AppiumDriver<*>) : Page(driver) {
 
-    //TPL = Template
+    /**
+     * TPL = Template
+     */
     var searchResultTPL = "//*[@resource-id='org.wikipedia:id/page_list_item_container']" +
             "//*[contains(@text, '%s')]"
     set(value) {
         field = field.format(value)
     }
 
-
     @AndroidFindBy(xpath = "//*[contains(@text, 'Search…')]")
     lateinit var searchInput: MobileElement
+
+    @AndroidFindBy(id = "search_close_btn")
+    lateinit var closeBtn: MobileElement
+
 }
 

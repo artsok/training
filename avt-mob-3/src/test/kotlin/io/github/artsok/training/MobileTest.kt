@@ -64,8 +64,10 @@ class MobileTest {
     @Test
     fun shouldFindSpecialWordInSearchResultList() {
         searchPage.searchResultTPL = "Object-oriented programming language"
+
         mainPage.searchWikipediaInputInit.lateClick(errorMassage = "Can't find and click 'Search Wikipedia input'")
         searchPage.searchInput.lateSendKeys("Java", errorMassage = "Cannot find and type into search input")
+
         assertThat("Cannot find search result with ${searchPage.searchResultTPL}", driver,
                 decorateMatcherWithWaiter(canFindElement(xpath(searchPage.searchResultTPL)),
                 timeoutHasExpired(5000L)))
@@ -73,17 +75,12 @@ class MobileTest {
 
     @Test
     fun searchCloseBtnShouldNotExistOnMainPage() {
-        mainPage.actions(xpath("//*[contains(@text, 'Search Wikipedia')]"),
-                WebElement::click,
-                "Can't find Search Wikipedia input")
-        mainPage.actions(xpath("//*[contains(@text, 'Search…')]"),
-                { element: WebElement -> element.sendKeys("Allure") })
-        mainPage.actions(id("org.wikipedia:id/search_src_text"),
-                { element: WebElement -> element.clear() })
-        val searchCloseBtn = mainPage.actions(id("search_close_btn"),
-                WebElement::click,
-                "Can't find Search Close Bottom")
-        assertThat(searchCloseBtn, should(not(exists())))
+        searchPage.searchResultTPL = "Allure"
+
+        mainPage.searchWikipediaInputInit.lateClick(errorMassage = "Can't find and click 'Search Wikipedia input'")
+        searchPage.closeBtn.lateClick(errorMassage = "Can't find 'Search Close' Button")
+
+        assertThat("Search cancel button is still present",searchPage.closeBtn, should(not(exists())))
     }
 
     @Test
