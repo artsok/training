@@ -199,28 +199,28 @@ class MobileTest {
 
     @Test
     fun amountOfArticleSearchShouldNotBeEmpty() {
+        val articlePage by lazy { ArticlePage(driver) }
         val searchLine = "Linkin Park Diskography"
-        mainPage.actions(xpath("//*[contains(@text, 'Search Wikipedia')]"),
-                WebElement::click)
-        mainPage.actions(xpath("//*[contains(@text, 'Search…')]"),
-                { element: WebElement -> element.sendKeys(searchLine) })
-        val searchResultsList = mainPage.getListViewElement(id("org.wikipedia:id/search_results_list"),
-                id("org.wikipedia:id/page_list_item_container"))
+
+        mainPage.searchWikipediaInputInit.lateClick()
+        searchPage.searchInput.lateSendKeys(searchLine)
+
+        val searchResultsList = articlePage.getFoundArticles()
         assertTrue(searchResultsList.isNotEmpty(), "We found too few results")
     }
 
     @Test
     fun amountOfArticleSearchShouldBeEmpty() {
-        val searchLine = ('a'..'z').randomString(6)
-        mainPage.actions(xpath("//*[contains(@text, 'Search Wikipedia')]"),
-                WebElement::click)
-        mainPage.actions(xpath("//*[contains(@text, 'Search…')]"),
-                { element: WebElement -> element.sendKeys(searchLine) })
-        mainPage.actions(xpath("//*[@resource-id='org.wikipedia:id/search_empty_text']"),
-                errorMassage = "Cannot find empty result label by request $searchLine")
+        val searchLine = ('a'..'z').randomString(16)
 
-        val searchResultLocator = "//*[@resource-id='org.wikipedia:id/search_results_list']/*[@resource-id='org.wikipedia:id/page_list_item_container']"
-        assertThat("We've found some results by request $searchLine", driver, should(not(canFindElement(xpath(searchResultLocator)))))
+        mainPage.searchWikipediaInputInit.lateClick()
+        searchPage.searchInput.lateSendKeys(searchLine)
+
+        val articlePage = ArticlePage(driver)
+        articlePage.waitForEmptyResultLabel()
+
+        assertThat("We've found some results by request $searchLine",
+                driver, should(not(canFindElement(xpath(articlePage.searchResults)))))
     }
 
 

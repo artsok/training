@@ -10,10 +10,20 @@ import io.github.artsok.training.ui.pageobjects.element.ToolbarElement
 import io.github.artsok.training.utils.lateClick
 import io.github.artsok.training.utils.lateSendKeys
 import org.openqa.selenium.By
+import org.openqa.selenium.By.id
+import org.openqa.selenium.WebElement
 
 class ArticlePage(driver: AppiumDriver<*>) : Page(driver) {
 
     private var footerElement = "//*[@text='View page in browser']"
+
+    private var searchResultsList = "org.wikipedia:id/search_results_list"
+
+    private var pageListItemContainer = "org.wikipedia:id/page_list_item_container"
+
+    private var searchEmptyResultElement = "//*[@resource-id='org.wikipedia:id/search_empty_text']"
+
+    public var searchResults = "//*[@resource-id='org.wikipedia:id/search_results_list']/*[@resource-id='org.wikipedia:id/page_list_item_container']"
 
     @AndroidFindBy(id = "org.wikipedia:id/view_page_title_text")
     lateinit var articleTitle: MobileElement
@@ -60,5 +70,16 @@ class ArticlePage(driver: AppiumDriver<*>) : Page(driver) {
     fun closeArticle() {
         val toolBarElement = ToolbarElement(driver)
         toolBarElement.navigateUpBtn.lateClick("Cannot close article, cannot find X link")
+    }
+
+    /**
+     * Get result founded list with articles
+     */
+    fun getFoundArticles(): List<WebElement> {
+        return getListViewElement(id(searchResultsList), id(pageListItemContainer))
+    }
+
+    fun waitForEmptyResultLabel() {
+        actions(By.xpath(searchEmptyResultElement), errorMassage = "Cannot find empty result label")
     }
 }
