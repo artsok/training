@@ -46,10 +46,10 @@
         </dependency>
         <!-- Подключили Allure Junit -->
         <!--<dependency>-->
-            <!--<groupId>io.qameta.allure</groupId>-->
-            <!--<artifactId>allure-junit4</artifactId>-->
-            <!--<version>${allure.version}</version>-->
-            <!--<scope>test</scope>-->
+        <!--<groupId>io.qameta.allure</groupId>-->
+        <!--<artifactId>allure-junit4</artifactId>-->
+        <!--<version>${allure.version}</version>-->
+        <!--<scope>test</scope>-->
         <!--</dependency>-->
         <!-- Подключили slf4j (использование стандартного вывода для логов) -->
         <dependency>
@@ -79,6 +79,13 @@
             <artifactId>java-client</artifactId>
             <version>${appium.version}</version>
         </dependency>
+        <!-- Подключили Owner для работы с properties -->
+        <dependency>
+            <groupId>org.aeonbits.owner</groupId>
+            <artifactId>owner-java8</artifactId>
+            <version>1.0.6</version>
+        </dependency>
+
     </dependencies>
     <!-- Для компиляции Kotlin -->
     <build>
@@ -103,28 +110,28 @@
                 </executions>
             </plugin>
             <!--<plugin>-->
-                <!--<groupId>org.apache.maven.plugins</groupId>-->
-                <!--<artifactId>maven-surefire-plugin</artifactId>-->
-                <!--<version>2.20</version>-->
-                <!--<configuration>-->
-                    <!--<testFailureIgnore>false</testFailureIgnore>-->
-                    <!--<argLine>-->
-                        <!-- -javaagent:"${settings.localRepository}/org/aspectj/aspectjweaver/${aspectj.version}/aspectjweaver-${aspectj.version}.jar"-->
-                    <!--</argLine>-->
-                    <!--<properties>-->
-                        <!--<property>-->
-                            <!--<name>listener</name>-->
-                            <!--<value>io.qameta.allure.junit4.AllureJunit4</value>-->
-                        <!--</property>-->
-                    <!--</properties>-->
-                <!--</configuration>-->
-                <!--<dependencies>-->
-                    <!--<dependency>-->
-                        <!--<groupId>org.aspectj</groupId>-->
-                        <!--<artifactId>aspectjweaver</artifactId>-->
-                        <!--<version>${aspectj.version}</version>-->
-                    <!--</dependency>-->
-                <!--</dependencies>-->
+            <!--<groupId>org.apache.maven.plugins</groupId>-->
+            <!--<artifactId>maven-surefire-plugin</artifactId>-->
+            <!--<version>2.20</version>-->
+            <!--<configuration>-->
+            <!--<testFailureIgnore>false</testFailureIgnore>-->
+            <!--<argLine>-->
+            <!-- -javaagent:"${settings.localRepository}/org/aspectj/aspectjweaver/${aspectj.version}/aspectjweaver-${aspectj.version}.jar"-->
+            <!--</argLine>-->
+            <!--<properties>-->
+            <!--<property>-->
+            <!--<name>listener</name>-->
+            <!--<value>io.qameta.allure.junit4.AllureJunit4</value>-->
+            <!--</property>-->
+            <!--</properties>-->
+            <!--</configuration>-->
+            <!--<dependencies>-->
+            <!--<dependency>-->
+            <!--<groupId>org.aspectj</groupId>-->
+            <!--<artifactId>aspectjweaver</artifactId>-->
+            <!--<version>${aspectj.version}</version>-->
+            <!--</dependency>-->
+            <!--</dependencies>-->
             <!--</plugin>-->
         </plugins>
     </build>

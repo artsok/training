@@ -2,39 +2,42 @@ package io.github.artsok.training.rules
 
 import io.appium.java_client.MobileElement
 import io.appium.java_client.android.AndroidDriver
+import io.github.artsok.training.MobileConfig
+import org.aeonbits.owner.ConfigFactory
 import org.junit.rules.ExternalResource
 import org.junit.rules.TestRule
 import org.junit.runner.Description
 import org.junit.runners.model.Statement
 import org.openqa.selenium.ScreenOrientation
 import org.openqa.selenium.remote.DesiredCapabilities
-import java.io.File
 import java.net.URL
+
 
 lateinit var driver: AndroidDriver<MobileElement>
 
-class DriverRule(private val file: File) : ExternalResource()  {
+class DriverRule : ExternalResource() {
+
+    private val config: MobileConfig = ConfigFactory.create(MobileConfig::class.java)
+
     override fun before() {
-        val url = URL("http://127.0.0.1:4723/wd/hub")
+        val url = URL(config.url())
         val desiredCapabilities = DesiredCapabilities().apply {
-            setCapability("platformName", "Android")
-            setCapability("deviceName", "Nexus 6P API 27")
-            setCapability("platformVersion", "8.1")
-            setCapability("appPackage", "org.wikipedia")
-            setCapability("appActivity", ".main.MainActivity")
-            setCapability("unicodeKeyboard", true)
-            setCapability("resetKeyboard", true)
-            setCapability("newCommandTimeout", 600 * 5);
-            setCapability("app", file.absoluteFile)
-            setCapability("automationName", "UiAutomator2")
+            setCapability("platformName", config.platformName())
+            setCapability("deviceName", config.deviceName())
+            setCapability("platformVersion", config.platformVersion())
+            setCapability("appPackage", config.appPackage())
+            setCapability("appActivity", config.appActivity())
+            setCapability("unicodeKeyboard", config.unicodeKeyboard())
+            setCapability("resetKeyboard", config.resetKeyboard())
+            setCapability("automationName", config.automationName())
+            setCapability("newCommandTimeout", config.newCommandTimeout());
+            setCapability("app", config.apkFile())
         }
         driver = AndroidDriver(url, desiredCapabilities)
     }
 
     override fun after() {
-        if (driver != null) {
-            driver.quit()
-        }
+        driver.quit()
     }
 
     fun getDriver(): AndroidDriver<MobileElement> {
