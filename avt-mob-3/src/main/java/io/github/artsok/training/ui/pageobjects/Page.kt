@@ -14,7 +14,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions
 import org.openqa.selenium.support.ui.WebDriverWait
 import java.time.Duration
 
-abstract class Page(private val driver: AppiumDriver<*>) {
+abstract class Page(protected val driver: AppiumDriver<*>) {
 
     init {
         PageFactory.initElements(AppiumFieldDecorator(driver), this)
@@ -85,7 +85,6 @@ abstract class Page(private val driver: AppiumDriver<*>) {
             }
             swipeDown(0)
             alreadySwiped = alreadySwiped.inc()
-            println(alreadySwiped)
         }
     }
 

@@ -6,9 +6,7 @@ import io.appium.java_client.android.AndroidDriver
 import io.github.artsok.training.matchers.WikiMatchers
 import io.github.artsok.training.rules.DriverRule
 import io.github.artsok.training.rules.RotateRule
-import io.github.artsok.training.ui.pageobjects.ArticlePage
-import io.github.artsok.training.ui.pageobjects.MainPage
-import io.github.artsok.training.ui.pageobjects.SearchPage
+import io.github.artsok.training.ui.pageobjects.*
 import io.github.artsok.training.utils.lateClick
 import io.github.artsok.training.utils.lateSendKeys
 import io.github.artsok.training.utils.randomString
@@ -71,7 +69,7 @@ class MobileTest {
 
         assertThat("Cannot find search result with ${searchPage.searchResultTPL}", driver,
                 decorateMatcherWithWaiter(canFindElement(xpath(searchPage.searchResultTPL)),
-                timeoutHasExpired(5000L)))
+                        timeoutHasExpired(5000L)))
     }
 
     @Test
@@ -81,7 +79,7 @@ class MobileTest {
         mainPage.searchWikipediaInputInit.lateClick(errorMassage = "Can't find and click 'Search Wikipedia input'")
         searchPage.closeBtn.lateClick(errorMassage = "Can't find 'Search Close' Button")
 
-        assertThat("Search cancel button is still present",searchPage.closeBtn, should(not(exists())))
+        assertThat("Search cancel button is still present", searchPage.closeBtn, should(not(exists())))
     }
 
     @Test
@@ -178,27 +176,25 @@ class MobileTest {
      */
     @Test
     fun articleShouldBeSavedToMyList() {
-        mainPage.actions(xpath("//*[contains(@text, 'Search Wikipedia')]"),
-                WebElement::click)
-        mainPage.actions(xpath("//*[contains(@text, 'Search…')]"),
-                { element: WebElement -> element.sendKeys("Appium") })
-        mainPage.actions(xpath("//*[@resource-id='org.wikipedia:id/page_list_item_title'][contains(@text, 'Appium')]"),
-                WebElement::click)
-        mainPage.actions(id("org.wikipedia:id/view_page_title_text"))
-        mainPage.actions(xpath("//*[@content-desc='More options']"), WebElement::click)
-        mainPage.actions(xpath("//android.widget.ListView"))
-        mainPage.actions(xpath("//*[@text='Add to reading list']"), WebElement::click, "Cannot find option to add article to reading list")
-        mainPage.actions(id("org.wikipedia:id/onboarding_button"), WebElement::click, "Cannot find 'Got it' tip overlay'")
-        mainPage.actions(id("org.wikipedia:id/text_input"), WebElement::clear, "Cannot find input to set name of articles folder")
-        mainPage.actions(id("org.wikipedia:id/text_input"),
-                { webElement -> webElement.sendKeys("Learning programing") },
-                "Cannot put text into articles folder input")
-        mainPage.actions(xpath("//*[@text='OK']"), WebElement::click, "Cannot press 'OK' button ")
-        mainPage.actions(xpath("//android.widget.ImageButton[@content-desc='Navigate up']"), WebElement::click, "Cannot close article, cannot find X link")
-        mainPage.actions(xpath("//android.widget.FrameLayout[@content-desc='My lists']"), WebElement::click, "Cannot find navigation button to My lists")
-        mainPage.actions(xpath("//*[@text='Learning programing']"), WebElement::click, "Cannot find created folder")
-        mainPage.swipeElementToLeft(xpath("//*[@text='Appium']"), "Cannot find saved article")
-        assertThat("Cannot delete saved article", driver, should(not(canFindElement(xpath("//*[@text='Appium']")))))
+        val articlePage by lazy { ArticlePage(driver) }
+        val navigationUIPage by lazy { NavigationUIPage(driver) }
+        val myListPage by lazy { MyListPage(driver) }
+
+        mainPage.searchWikipediaInputInit.lateClick(errorMassage = "Can't find and click 'Search Wikipedia input'")
+        searchPage.searchInput.lateSendKeys("Appium", errorMassage = "Cannot find and type into search input")
+        searchPage.clickByArticleWithSubString("Appium")
+
+        val articleTitle = articlePage.getArticleTitle()
+        val nameOfFolder = "Learning programing"
+
+        articlePage.addArticleToMyList(nameOfFolder)
+        articlePage.closeArticle()
+        navigationUIPage.clickMyList()
+        myListPage.openFolderByName(nameOfFolder)
+        myListPage.swipeArticleToDelete(articleTitle)
+
+        assertThat("Cannot delete saved article '$articleTitle'", driver,
+                should(not(canFindElement(xpath("//*[@text='%s']".format(articleTitle))))))
     }
 
     @Test
