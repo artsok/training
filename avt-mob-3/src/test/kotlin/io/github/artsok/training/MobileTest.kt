@@ -6,6 +6,7 @@ import io.appium.java_client.android.AndroidDriver
 import io.github.artsok.training.matchers.WikiMatchers
 import io.github.artsok.training.rules.DriverRule
 import io.github.artsok.training.rules.RotateRule
+import io.github.artsok.training.ui.pageobjects.ArticlePage
 import io.github.artsok.training.ui.pageobjects.MainPage
 import io.github.artsok.training.ui.pageobjects.SearchPage
 import io.github.artsok.training.utils.lateClick
@@ -85,17 +86,14 @@ class MobileTest {
 
     @Test
     fun articleShouldHaveSpecialTitle() {
-        mainPage.actions(xpath("//*[contains(@text, 'Search Wikipedia')]"),
-                WebElement::click,
-                "Can't find Search Wikipedia input")
-        mainPage.actions(xpath("//*[contains(@text, 'Search…')]"),
-                { element: WebElement -> element.sendKeys("Java") })
-        mainPage.actions(xpath("//*[@resource-id='org.wikipedia:id/page_list_item_container']//*[contains(@text, 'Object-oriented programming language')]"),
-                WebElement::click,
-                "Can't find element with text 'Object-oriented programming language'")
-        val titleElement = mainPage.actions(id("org.wikipedia:id/view_page_title_text"))
-        val articleTitle = titleElement.getAttribute("text")
-        assertThat(articleTitle, equalTo("Java (programming language)"))
+        val articlePage by lazy { ArticlePage(driver) }
+
+        mainPage.searchWikipediaInputInit.lateClick(errorMassage = "Can't find and click 'Search Wikipedia input'")
+        searchPage.searchInput.lateSendKeys("Java", errorMassage = "Cannot find and type into search input")
+        searchPage.clickByArticleWithSubString("Object-oriented programming language")
+
+        val articleTitle = articlePage.getArticleTitle()
+        assertThat("We see unexpected title", articleTitle, equalTo("Java (programming language)"))
     }
 
     /**
@@ -158,14 +156,12 @@ class MobileTest {
      */
     @Test
     fun articleShouldBeWithSwipeAction() {
-        mainPage.actions(xpath("//*[contains(@text, 'Search Wikipedia')]"),
-                WebElement::click)
-        mainPage.actions(xpath("//*[contains(@text, 'Search…')]"),
-                { element: WebElement -> element.sendKeys("Appium") })
-        mainPage.actions(xpath("//*[@resource-id='org.wikipedia:id/page_list_item_title'][contains(@text, 'Appium')]"),
-                WebElement::click)
-        mainPage.actions(id("org.wikipedia:id/view_page_title_text"))
-        mainPage.swipeToElement(xpath("//*[@text='View page in browser']"), 12, "Cannot find the end of the article")
+        val articlePage by lazy { ArticlePage(driver) }
+
+        mainPage.searchWikipediaInputInit.lateClick(errorMassage = "Can't find and click 'Search Wikipedia input'")
+        searchPage.searchInput.lateSendKeys("Appium", errorMassage = "Cannot find and type into search input")
+        searchPage.clickByArticleWithSubString("Appium")
+        articlePage.swipeToFooter()
     }
 
     /**
