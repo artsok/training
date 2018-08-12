@@ -2,7 +2,7 @@ package io.github.artsok.training.rules
 
 import io.appium.java_client.MobileElement
 import io.appium.java_client.android.AndroidDriver
-import io.github.artsok.training.MobileConfig
+import io.github.artsok.training.utils.MobileConfig
 import org.aeonbits.owner.ConfigFactory
 import org.junit.rules.ExternalResource
 import org.junit.rules.TestRule
@@ -11,7 +11,6 @@ import org.junit.runners.model.Statement
 import org.openqa.selenium.ScreenOrientation
 import org.openqa.selenium.remote.DesiredCapabilities
 import java.net.URL
-
 
 lateinit var driver: AndroidDriver<MobileElement>
 

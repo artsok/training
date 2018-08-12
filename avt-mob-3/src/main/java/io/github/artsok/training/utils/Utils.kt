@@ -1,4 +1,4 @@
-package io.github.artsok.training
+package io.github.artsok.training.utils
 
 import java.util.*
 

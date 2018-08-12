@@ -7,6 +7,10 @@ import io.github.artsok.training.matchers.WikiMatchers
 import io.github.artsok.training.rules.DriverRule
 import io.github.artsok.training.rules.RotateRule
 import io.github.artsok.training.ui.pageobjects.MainPage
+import io.github.artsok.training.ui.pageobjects.SearchPage
+import io.github.artsok.training.utils.lateClick
+import io.github.artsok.training.utils.lateSendKeys
+import io.github.artsok.training.utils.randomString
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.*
 import org.junit.Before
@@ -32,6 +36,7 @@ class MobileTest {
 
     private lateinit var driver: AndroidDriver<MobileElement>
     private lateinit var mainPage: MainPage
+    private lateinit var searchPage: SearchPage
 
     private val driverRule = DriverRule()
     private val rotateRule = RotateRule()
@@ -53,18 +58,17 @@ class MobileTest {
     @Before
     fun setUp() {
         mainPage = MainPage(driver)
+        searchPage = SearchPage(driver)
     }
 
     @Test
     fun shouldFindSpecialWordInSearchResultList() {
-        mainPage.actions(xpath("//*[contains(@text, 'Search Wikipedia')]"),
-                WebElement::click,
-                "Can't find Search Wikipedia input")
-        mainPage.actions(xpath("//*[contains(@text, 'Search…')]"),
-                { element: WebElement -> element.sendKeys("Java") })
-        assertThat(driver, decorateMatcherWithWaiter(
-                canFindElement(xpath("//*[@resource-id='org.wikipedia:id/page_list_item_container']" +
-                        "//*[contains(@text, 'Object-oriented programming language')]")), timeoutHasExpired(5000L)))
+        searchPage.searchResultTPL = "Object-oriented programming language"
+        mainPage.searchWikipediaInputInit.lateClick(errorMassage = "Can't find and click 'Search Wikipedia input'")
+        searchPage.searchInput.lateSendKeys("Java", errorMassage = "Cannot find and type into search input")
+        assertThat("Cannot find search result with ${searchPage.searchResultTPL}", driver,
+                decorateMatcherWithWaiter(canFindElement(xpath(searchPage.searchResultTPL)),
+                timeoutHasExpired(5000L)))
     }
 
     @Test
@@ -365,3 +369,4 @@ class MobileTest {
         mainPage.assertElementPresent(id("org.wikipedia:id/view_page_title_text"), "Article doesn't have title")
     }
 }
+
