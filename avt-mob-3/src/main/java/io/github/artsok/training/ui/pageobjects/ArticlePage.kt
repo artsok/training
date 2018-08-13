@@ -7,6 +7,7 @@ import io.github.artsok.training.ui.pageobjects.element.ActionBarRootElement
 import io.github.artsok.training.ui.pageobjects.element.ListViewElement
 import io.github.artsok.training.ui.pageobjects.element.OnBoardingElement
 import io.github.artsok.training.ui.pageobjects.element.ToolbarElement
+import io.github.artsok.training.utils.getLateAttribute
 import io.github.artsok.training.utils.lateClick
 import io.github.artsok.training.utils.lateSendKeys
 import org.openqa.selenium.By
@@ -36,7 +37,7 @@ class ArticlePage(driver: AppiumDriver<*>) : Page(driver) {
      * @return text attribute of element
      */
     fun getArticleTitle(): String {
-        return articleTitle.getAttribute("text")
+        return articleTitle.getLateAttribute("text")
     }
 
     /**

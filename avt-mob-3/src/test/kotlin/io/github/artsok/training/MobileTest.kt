@@ -145,7 +145,7 @@ class MobileTest {
                 "Can't find Search Wikipedia input")
         mainPage.actions(xpath("//*[contains(@text, 'Search…')]"),
                 { element: WebElement -> element.sendKeys("Java") })
-        assertThat("Java", should(WikiMatchers(mainPage).containsInResultList())) //TODO: refactor
+        assertThat("Java", should(WikiMatchers(mainPage).containsInResultList())) //TODO: refactor -> Подумать, что делать со своим матчером
     }
 
 
@@ -226,40 +226,39 @@ class MobileTest {
 
     @Test
     fun articleShouldNotBeRenameAfterChangeScreenOrientationOnSearchResults() {
-        val searchLine = "Java"
-        mainPage.actions(xpath("//*[contains(@text, 'Search Wikipedia')]"),
-                WebElement::click)
-        mainPage.actions(xpath("//*[contains(@text, 'Search…')]"),
-                { element: WebElement -> element.sendKeys(searchLine) })
-        mainPage.actions(xpath("//*[@resource-id='org.wikipedia:id/page_list_item_container']//*[contains(@text, 'Object-oriented programming language')]"),
-                WebElement::click, "Can't find element with text 'Object-oriented programming language' topic searching by $searchLine")
+        val articlePage by lazy { ArticlePage(driver) }
 
-        val titleBeforeRotation = mainPage.waitForElementAndGetAttribute(id("org.wikipedia:id/view_page_title_text"), attribute = "text", errorMassage = "Cannot find title of article")
+        val searchLine = "Java"
+        mainPage.searchWikipediaInputInit.lateClick(errorMassage = "Can't find and click 'Search Wikipedia input'")
+        searchPage.searchInput.lateSendKeys(searchLine, errorMassage = "Cannot find and type into search input")
+        searchPage.clickByArticleWithSubString("Object-oriented programming language")
+
+        val titleBeforeRotation = articlePage.getArticleTitle()
         driver.rotate(ScreenOrientation.LANDSCAPE)
-        val titleAfterRotation = mainPage.waitForElementAndGetAttribute(id("org.wikipedia:id/view_page_title_text"), attribute = "text", errorMassage = "Cannot find title of article")
+        val titleAfterRotation = articlePage.getArticleTitle()
 
         assertThat("Article title have been changed after screen rotation", titleBeforeRotation, equalTo(titleAfterRotation))
 
         driver.rotate(ScreenOrientation.PORTRAIT)
-        val titleAfterSecondRotation = mainPage.waitForElementAndGetAttribute(id("org.wikipedia:id/view_page_title_text"), attribute = "text", errorMassage = "Cannot find title of article")
+        val titleAfterSecondRotation = articlePage.getArticleTitle()
 
         assertThat("Article title have been changed after screen rotation", titleBeforeRotation, equalTo(titleAfterSecondRotation))
     }
 
-    @Test
+    @Test //flaky test
     fun searchArticleShouldBeAvailableAfterBackground() {
+        val articlePage by lazy { ArticlePage(driver) }
+
         val searchLine = "Java"
-        mainPage.actions(xpath("//*[contains(@text, 'Search Wikipedia')]"),
-                WebElement::click)
-        mainPage.actions(xpath("//*[contains(@text, 'Search…')]"),
-                { element: WebElement -> element.sendKeys(searchLine) })
-        mainPage.actions(xpath("//*[@resource-id='org.wikipedia:id/page_list_item_container']//*[contains(@text, 'Object-oriented programming language')]"),
-                errorMassage = "Can't find element with text 'Object-oriented programming language' topic searching by $searchLine")
+        mainPage.searchWikipediaInputInit.lateClick(errorMassage = "Can't find and click 'Search Wikipedia input'")
+        searchPage.searchInput.lateSendKeys(searchLine, errorMassage = "Cannot find and type into search input")
+        searchPage.clickByArticleWithSubString("Object-oriented programming language")
+
         driver.runAppInBackground(ofSeconds(3))
 
-
         assertThat("Cannot find article after returning from background",
-                driver, should(canFindElement(xpath("//*[@resource-id='org.wikipedia:id/page_list_item_container']//*[contains(@text, 'Object-oriented programming language')]"))))
+                driver, decorateMatcherWithWaiter(should(canFindElement(xpath("//*[@resource-id='org.wikipedia:id/page_list_item_container']" +
+                "//*[contains(@text, 'Object-oriented programming language')]"))), timeoutHasExpired(5000L)))
     }
 
 

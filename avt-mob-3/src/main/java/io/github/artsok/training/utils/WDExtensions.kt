@@ -16,8 +16,14 @@ fun WebElement.lateClick(errorMassage: String = "Can't find element '$this'", ti
     element.click()
 }
 
-fun WebElement.lateSendKeys(text:String, errorMassage: String = "Can't find element '$this'", timeOut: Long = 5) {
+fun WebElement.lateSendKeys(text: String, errorMassage: String = "Can't find element '$this'", timeOut: Long = 5) {
     val driverWait = WebDriverWait(driver, timeOut).withMessage("$errorMassage\n")
     val element = driverWait.until(ExpectedConditions.visibilityOf(this))
     element.sendKeys(text)
+}
+
+fun WebElement.getLateAttribute(nameOfAttribute: String, errorMassage: String = "Can't find element '$this'", timeOut: Long = 5): String {
+    val driverWait = WebDriverWait(driver, timeOut).withMessage("$errorMassage\n")
+    val element = driverWait.until(ExpectedConditions.visibilityOf(this))
+    return element.getAttribute(nameOfAttribute)
 }
