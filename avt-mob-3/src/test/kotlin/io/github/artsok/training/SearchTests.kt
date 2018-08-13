@@ -143,4 +143,20 @@ class SearchTests {
                         .containsInResultList())) //TODO: refactor -> Подумать, что делать со своим матчером
     }
 
+    /**
+     * Ex9*: Рефакторинг темплейта
+     *
+     * Написать тест, который будет делать поиск по любому запросу на ваш выбор
+     * (поиск по этому слову должен возвращать как минимум 3 результата).
+     * Далее тест должен убеждаться, что первых три результата присутствуют в результате поиска.
+     */
+    @Test
+    fun resultListShouldContainThreeSpecialArticleWithTitleAndDescription() {
+        mainPage.searchWikipediaInputInit.lateClick()
+        searchPage.searchInput.lateSendKeys("Java")
+        searchPage.waitForElementByTitleAndDescription("Java", "Island of Indonesia")
+        searchPage.waitForElementByTitleAndDescription("Java (programming language)", "Object-oriented programming language")
+        searchPage.waitForElementByTitleAndDescription("JavaScript", "Programming language")
+    }
+
 }

@@ -17,9 +17,11 @@ class SearchPage(driver: AppiumDriver<*>) : Page(driver) {
      * TPL = Template
      */
     var searchResultTPL = "//*[@resource-id='org.wikipedia:id/page_list_item_container']//*[contains(@text, '%s')]"
-    set(value) {
-        field = field.format(value)
-    }
+        set(value) {
+            field = field.format(value)
+        }
+
+    private var searchResultWithDescription = "//android.widget.LinearLayout[android.widget.TextView[@text='%s'] and android.widget.TextView[@text='%s']]"
 
     @AndroidFindBy(xpath = "//*[contains(@text, 'Search…')]")
     lateinit var searchInput: MobileElement
@@ -28,7 +30,7 @@ class SearchPage(driver: AppiumDriver<*>) : Page(driver) {
     lateinit var closeBtn: MobileElement
 
 
-    fun clickByArticleWithSubString(subString:String) {
+    fun clickByArticleWithSubString(subString: String) {
         actions(By.xpath(searchResultTPL.format(subString)),
                 WebElement::click,
                 errorMassage = "Cannot find and click search result with substring $subString")
@@ -39,6 +41,14 @@ class SearchPage(driver: AppiumDriver<*>) : Page(driver) {
      */
     fun getFoundArticles(): List<WebElement> {
         return getListViewElement(By.id(searchResultsList), By.id(pageListItemContainer))
+    }
+
+    /**
+     * Wait article with title and description
+     */
+    fun waitForElementByTitleAndDescription(title: String, description: String) {
+        actions(By.xpath(searchResultWithDescription.format(title, description)),
+                errorMassage = "Cannot find and click search result with title '$title' and description '$description'")
     }
 
 }
