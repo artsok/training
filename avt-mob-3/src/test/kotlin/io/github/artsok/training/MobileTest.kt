@@ -6,10 +6,8 @@ import io.appium.java_client.android.AndroidDriver
 import io.github.artsok.training.matchers.WikiMatchers
 import io.github.artsok.training.rules.DriverRule
 import io.github.artsok.training.rules.RotateRule
-import io.github.artsok.training.ui.pageobjects.*
-import io.github.artsok.training.utils.lateClick
-import io.github.artsok.training.utils.lateSendKeys
-import io.github.artsok.training.utils.randomString
+import io.github.artsok.training.ui.pageobjects.MainPage
+import io.github.artsok.training.ui.pageobjects.SearchPage
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.*
 import org.junit.Before
@@ -20,15 +18,9 @@ import org.junit.rules.RuleChain
 import org.junit.rules.TestRule
 import org.openqa.selenium.By.id
 import org.openqa.selenium.By.xpath
-import org.openqa.selenium.ScreenOrientation
 import org.openqa.selenium.WebElement
 import ru.yandex.qatools.matchers.decorators.MatcherDecorators.should
-import ru.yandex.qatools.matchers.decorators.TimeoutWaiter.timeoutHasExpired
-import ru.yandex.qatools.matchers.decorators.WaiterMatcherDecorator.decorateMatcherWithWaiter
-import ru.yandex.qatools.matchers.webdriver.ExistsMatcher.exists
 import ru.yandex.qatools.matchers.webdriver.driver.CanFindElementMatcher.canFindElement
-import java.time.Duration.ofSeconds
-import kotlin.test.assertTrue
 
 
 class MobileTest {
@@ -60,39 +52,8 @@ class MobileTest {
         searchPage = SearchPage(driver)
     }
 
-    @Test
-    fun shouldFindSpecialWordInSearchResultList() {
-        searchPage.searchResultTPL = "Object-oriented programming language"
 
-        mainPage.searchWikipediaInputInit.lateClick(errorMassage = "Can't find and click 'Search Wikipedia input'")
-        searchPage.searchInput.lateSendKeys("Java", errorMassage = "Cannot find and type into search input")
 
-        assertThat("Cannot find search result with ${searchPage.searchResultTPL}", driver,
-                decorateMatcherWithWaiter(canFindElement(xpath(searchPage.searchResultTPL)),
-                        timeoutHasExpired(5000L)))
-    }
-
-    @Test
-    fun searchCloseBtnShouldNotExistOnMainPage() {
-        searchPage.searchResultTPL = "Allure"
-
-        mainPage.searchWikipediaInputInit.lateClick(errorMassage = "Can't find and click 'Search Wikipedia input'")
-        searchPage.closeBtn.lateClick(errorMassage = "Can't find 'Search Close' Button")
-
-        assertThat("Search cancel button is still present", searchPage.closeBtn, should(not(exists())))
-    }
-
-    @Test
-    fun articleShouldHaveSpecialTitle() {
-        val articlePage by lazy { ArticlePage(driver) }
-
-        mainPage.searchWikipediaInputInit.lateClick(errorMassage = "Can't find and click 'Search Wikipedia input'")
-        searchPage.searchInput.lateSendKeys("Java", errorMassage = "Cannot find and type into search input")
-        searchPage.clickByArticleWithSubString("Object-oriented programming language")
-
-        val articleTitle = articlePage.getArticleTitle()
-        assertThat("We see unexpected title", articleTitle, equalTo("Java (programming language)"))
-    }
 
     /**
      * Написать тест, который проверяет наличие текста “Search…” в строке поиска перед вводом текста
@@ -148,118 +109,6 @@ class MobileTest {
         assertThat("Java", should(WikiMatchers(mainPage).containsInResultList())) //TODO: refactor -> Подумать, что делать со своим матчером
     }
 
-
-    /**
-     * III. Сложные тесты
-     */
-    @Test
-    fun articleShouldBeWithSwipeAction() {
-        val articlePage by lazy { ArticlePage(driver) }
-
-        mainPage.searchWikipediaInputInit.lateClick(errorMassage = "Can't find and click 'Search Wikipedia input'")
-        searchPage.searchInput.lateSendKeys("Appium", errorMassage = "Cannot find and type into search input")
-        searchPage.clickByArticleWithSubString("Appium")
-        articlePage.swipeToFooter()
-    }
-
-    /**
-     * 1. Запустить приложение
-     * 2. Ввести название слова в поиск
-     * 3. Выбрать статью
-     * 4. Открыть меню нажав кнопкой 'more options' и нажать кнопку 'Add to reading list'. Далее клик по Overlay
-     * 5. Создать новый список
-     * 6. Перейти в свои списки
-     * 7. Выбрать один из списков
-     * 8. Убедиться, что тут присутсвуте нужная нам статья
-     * 9. Удалить статью
-     * 10. Проверить, что статья удалена
-     */
-    @Test
-    fun articleShouldBeSavedToMyList() {
-        val articlePage by lazy { ArticlePage(driver) }
-        val navigationUIPage by lazy { NavigationUIPage(driver) }
-        val myListPage by lazy { MyListPage(driver) }
-
-        mainPage.searchWikipediaInputInit.lateClick(errorMassage = "Can't find and click 'Search Wikipedia input'")
-        searchPage.searchInput.lateSendKeys("Appium", errorMassage = "Cannot find and type into search input")
-        searchPage.clickByArticleWithSubString("Appium")
-
-        val articleTitle = articlePage.getArticleTitle()
-        val nameOfFolder = "Learning programing"
-
-        articlePage.addArticleToMyList(nameOfFolder)
-        articlePage.closeArticle()
-        navigationUIPage.clickMyList()
-        myListPage.openFolderByName(nameOfFolder)
-        myListPage.swipeArticleToDelete(articleTitle)
-
-        assertThat("Cannot delete saved article '$articleTitle'", driver,
-                should(not(canFindElement(xpath("//*[@text='%s']".format(articleTitle))))))
-    }
-
-    @Test
-    fun amountOfArticleSearchShouldNotBeEmpty() {
-        val articlePage by lazy { ArticlePage(driver) }
-        val searchLine = "Linkin Park Diskography"
-
-        mainPage.searchWikipediaInputInit.lateClick()
-        searchPage.searchInput.lateSendKeys(searchLine)
-
-        val searchResultsList = articlePage.getFoundArticles()
-        assertTrue(searchResultsList.isNotEmpty(), "We found too few results")
-    }
-
-    @Test
-    fun amountOfArticleSearchShouldBeEmpty() {
-        val searchLine = ('a'..'z').randomString(16)
-
-        mainPage.searchWikipediaInputInit.lateClick()
-        searchPage.searchInput.lateSendKeys(searchLine)
-
-        val articlePage = ArticlePage(driver)
-        articlePage.waitForEmptyResultLabel()
-
-        assertThat("We've found some results by request $searchLine",
-                driver, should(not(canFindElement(xpath(articlePage.searchResults)))))
-    }
-
-
-    @Test
-    fun articleShouldNotBeRenameAfterChangeScreenOrientationOnSearchResults() {
-        val articlePage by lazy { ArticlePage(driver) }
-
-        val searchLine = "Java"
-        mainPage.searchWikipediaInputInit.lateClick(errorMassage = "Can't find and click 'Search Wikipedia input'")
-        searchPage.searchInput.lateSendKeys(searchLine, errorMassage = "Cannot find and type into search input")
-        searchPage.clickByArticleWithSubString("Object-oriented programming language")
-
-        val titleBeforeRotation = articlePage.getArticleTitle()
-        driver.rotate(ScreenOrientation.LANDSCAPE)
-        val titleAfterRotation = articlePage.getArticleTitle()
-
-        assertThat("Article title have been changed after screen rotation", titleBeforeRotation, equalTo(titleAfterRotation))
-
-        driver.rotate(ScreenOrientation.PORTRAIT)
-        val titleAfterSecondRotation = articlePage.getArticleTitle()
-
-        assertThat("Article title have been changed after screen rotation", titleBeforeRotation, equalTo(titleAfterSecondRotation))
-    }
-
-    @Test //flaky test
-    fun searchArticleShouldBeAvailableAfterBackground() {
-        val articlePage by lazy { ArticlePage(driver) }
-
-        val searchLine = "Java"
-        mainPage.searchWikipediaInputInit.lateClick(errorMassage = "Can't find and click 'Search Wikipedia input'")
-        searchPage.searchInput.lateSendKeys(searchLine, errorMassage = "Cannot find and type into search input")
-        searchPage.clickByArticleWithSubString("Object-oriented programming language")
-
-        driver.runAppInBackground(ofSeconds(3))
-
-        assertThat("Cannot find article after returning from background",
-                driver, decorateMatcherWithWaiter(should(canFindElement(xpath("//*[@resource-id='org.wikipedia:id/page_list_item_container']" +
-                "//*[contains(@text, 'Object-oriented programming language')]"))), timeoutHasExpired(5000L)))
-    }
 
 
     /**
