@@ -17,6 +17,7 @@ import org.junit.Test
 import org.junit.rules.ExternalResource
 import org.junit.rules.RuleChain
 import org.junit.rules.TestRule
+import org.openqa.selenium.By.id
 
 class ArticleTests {
     private lateinit var driver: AndroidDriver<MobileElement>
@@ -67,5 +68,21 @@ class ArticleTests {
         articlePage.swipeToFooter()
     }
 
+    /**
+     * Ex6: Assert title
+     *
+     * Написать тест, который открывает статью и убеждается, что у нее есть элемент title.
+     * Важно: тест не должен дожидаться появления title, проверка должна производиться сразу.
+     * Если title не найден - тест падает с ошибкой. Метод можно назвать assertElementPresent.
+     */
+    @Test
+    fun articleShouldHaveTitleWithQuickFind() {
+        val searchLine = "Java"
 
+        mainPage.searchWikipediaInputInit.lateClick()
+        searchPage.searchInput.lateSendKeys(searchLine)
+        searchPage.clickByArticleWithSubString("Island of Indonesia")
+        searchPage.assertElementPresent(id("org.wikipedia:id/view_page_title_text"),
+                "Article doesn't have title")
+    }
 }

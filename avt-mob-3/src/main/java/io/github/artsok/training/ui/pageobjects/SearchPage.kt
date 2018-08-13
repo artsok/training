@@ -9,6 +9,10 @@ import org.openqa.selenium.WebElement
 
 class SearchPage(driver: AppiumDriver<*>) : Page(driver) {
 
+    private var searchResultsList = "org.wikipedia:id/search_results_list"
+
+    private var pageListItemContainer = "org.wikipedia:id/page_list_item_container"
+
     /**
      * TPL = Template
      */
@@ -28,6 +32,13 @@ class SearchPage(driver: AppiumDriver<*>) : Page(driver) {
         actions(By.xpath(searchResultTPL.format(subString)),
                 WebElement::click,
                 errorMassage = "Cannot find and click search result with substring $subString")
+    }
+
+    /**
+     * Get result founded list with articles
+     */
+    fun getFoundArticles(): List<WebElement> {
+        return getListViewElement(By.id(searchResultsList), By.id(pageListItemContainer))
     }
 
 }

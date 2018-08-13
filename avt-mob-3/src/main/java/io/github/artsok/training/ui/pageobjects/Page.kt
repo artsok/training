@@ -16,6 +16,8 @@ import java.time.Duration
 
 abstract class Page(protected val driver: AppiumDriver<*>) {
 
+    protected val textTPL = "//*[@text='%s']"
+
     init {
         PageFactory.initElements(AppiumFieldDecorator(driver), this)
     }

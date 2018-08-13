@@ -2,22 +2,23 @@ package io.github.artsok.training
 
 import io.appium.java_client.MobileElement
 import io.appium.java_client.android.AndroidDriver
+import io.github.artsok.training.matchers.WikiMatchers
 import io.github.artsok.training.rules.DriverRule
 import io.github.artsok.training.rules.RotateRule
-import io.github.artsok.training.ui.pageobjects.ArticlePage
 import io.github.artsok.training.ui.pageobjects.MainPage
 import io.github.artsok.training.ui.pageobjects.SearchPage
 import io.github.artsok.training.utils.lateClick
 import io.github.artsok.training.utils.lateSendKeys
 import org.hamcrest.MatcherAssert.assertThat
-import org.hamcrest.Matchers.not
+import org.hamcrest.Matchers.*
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.ExternalResource
 import org.junit.rules.RuleChain
 import org.junit.rules.TestRule
-import org.openqa.selenium.By
+import org.openqa.selenium.By.id
+import org.openqa.selenium.By.xpath
 import ru.yandex.qatools.matchers.decorators.MatcherDecorators.should
 import ru.yandex.qatools.matchers.decorators.TimeoutWaiter.timeoutHasExpired
 import ru.yandex.qatools.matchers.decorators.WaiterMatcherDecorator.decorateMatcherWithWaiter
@@ -61,7 +62,7 @@ class SearchTests {
         searchPage.searchInput.lateSendKeys("Java", errorMassage = "Cannot find and type into search input")
 
         assertThat("Cannot find search result with ${searchPage.searchResultTPL}", driver,
-                decorateMatcherWithWaiter(canFindElement(By.xpath(searchPage.searchResultTPL)),
+                decorateMatcherWithWaiter(canFindElement(xpath(searchPage.searchResultTPL)),
                         timeoutHasExpired(5000L)))
     }
 
@@ -77,14 +78,69 @@ class SearchTests {
 
     @Test
     fun amountOfArticleSearchShouldNotBeEmpty() {
-        val articlePage by lazy { ArticlePage(driver) }
         val searchLine = "Linkin Park Diskography"
 
         mainPage.searchWikipediaInputInit.lateClick()
         searchPage.searchInput.lateSendKeys(searchLine)
 
-        val searchResultsList = articlePage.getFoundArticles()
+        val searchResultsList = searchPage.getFoundArticles()
         assertTrue(searchResultsList.isNotEmpty(), "We found too few results")
+    }
+
+
+    /**
+     * Ex2: Создание метода
+     *
+     * Написать тест, который проверяет наличие текста “Search…” в строке поиска перед вводом текста
+     * и помечает тест упавшим, если такого текста нет.
+     */
+    @Test
+    fun specialWordShouldExistInSearchInput() {
+        mainPage.searchWikipediaInputInit.lateClick()
+        assertThat("Special Word 'Search…' is missed",
+                searchPage.searchInput.text, should(containsString("Search…")))
+    }
+
+
+    /**
+     * Ex3: Отмена поиска
+     *
+     * Написать тест, который:
+     * 1. Ищет какое-то слово
+     * 2. Убеждается, что найдено несколько статей
+     * 3. Отменяет поиск
+     * 4. Убеждается, что результат поиска пропал
+     */
+    @Test
+    fun afterCancelSearchesListShouldBeEmpty() {
+        mainPage.searchWikipediaInputInit.lateClick()
+        searchPage.searchInput.lateSendKeys("C++")
+
+        val searchResultsList = searchPage.getFoundArticles()
+
+        assertThat("It's no results with you search text",
+                searchResultsList.size, greaterThanOrEqualTo(1))
+        searchPage.closeBtn.lateClick()
+
+        assertThat("Search list not empty", driver,
+                should(not(canFindElement(id("org.wikipedia:id/search_results_list")))))
+    }
+
+    /**
+     * Ex4*: Проверка слов в поиске
+     *
+     * Написать тест, который:
+     * Ищет какое-то слово
+     * Убеждается, что в каждом результате поиска есть это слово.
+     */
+    @Test
+    fun resultListShouldContainSpecialWords() {
+        mainPage.searchWikipediaInputInit.lateClick()
+        searchPage.searchInput.lateSendKeys("Java")
+
+        assertThat("Java",
+                should(WikiMatchers(mainPage)
+                        .containsInResultList())) //TODO: refactor -> Подумать, что делать со своим матчером
     }
 
 }
