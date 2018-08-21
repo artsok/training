@@ -37,6 +37,29 @@
 
 Это означает, что все capabilities были указаны верно.
 
+### Настройка окружения для IOS приложений"
+1. Требуется установить XCode. После установки появится вот такое окно приветствия:
+![alt text](https://github.com/artsok/training/blob/master/images/welcome_to_xcode.png)
+2. Проверить установленный симуляторы. Перейти во вкладку Window -> Devices and Simulators
+![alt text](https://github.com/artsok/training/blob/master/images/xcode-simulators.png)
+Если потребуется еще установить дополнительные симуляторы, то нажимаем кнопочку 'плюс' в окне Devices and Simulators. 
+![alt text](https://github.com/artsok/training/blob/master/images/xcode-add-new-sim.png)
+3. Скачиваем архив с приложением wikipedia-ios-develop.zip, разархивируем.
+4. Открываем Readme.md и следуем инструкции установки (!Внимание - не меняйте порядок действий команд).
+```bash
+cd Downloads/wikipedia-ios-develop
+scripts/setup 
+```
+Установка зависимостей прошла успешно.
+![alt text](https://github.com/artsok/training/blob/master/images/wikipedia-ios-develop — -bash — 91×27 2018-08-21 08-25-58.png)
+5. Производим запуск приложения. Переходим в папку с приложением и запустим Wikipedia.xcodeproj (!Внимание: не запускайте его
+до установки всех зависимостей. Это может привести к тому, что проект придется удалять и устанавливать все заново). 
+Дождитесь индексации всех файлов! 
+![alt text](https://github.com/artsok/training/blob/master/images/Empty Tab 2018-08-21 08-34-22.png)
+6. Скомпилировать проект и запустить на симуляторе. Производим выбор нужного симулятора и нажимаем кнопку запустить. 
+
+
+
 ### Простые сценарии в Appium
 1. Чтобы найти элемент необходимо выполнить его поиск с помощью UI Automator Viewer, либо Appium Viewer.
 ![alt text](https://github.com/artsok/training/blob/master/images/UI%20Automator%20Viewer%202018-07-18%2018-45-51.png)
