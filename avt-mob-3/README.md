@@ -51,11 +51,11 @@ cd Downloads/wikipedia-ios-develop
 scripts/setup 
 ```
 Установка зависимостей прошла успешно.
-![alt text](https://github.com/artsok/training/blob/master/images/wikipedia-ios-develop — -bash — 91×27 2018-08-21 08-25-58.png)
+![alt text](https://github.com/artsok/training/blob/master/images/wikipedia-ios-develop%20%E2%80%94%20-bash%20%E2%80%94%2091%C3%9727%202018-08-21%2008-25-58.png)
 5. Производим запуск приложения. Переходим в папку с приложением и запустим Wikipedia.xcodeproj (!Внимание: не запускайте его
 до установки всех зависимостей. Это может привести к тому, что проект придется удалять и устанавливать все заново). 
 Дождитесь индексации всех файлов! 
-![alt text](https://github.com/artsok/training/blob/master/images/Empty Tab 2018-08-21 08-34-22.png)
+![alt text](https://github.com/artsok/training/blob/master/images/Empty%20Tab%202018-08-21%2008-34-22.png)
 6. Скомпилировать проект и запустить на симуляторе. Производим выбор нужного симулятора и нажимаем кнопку запустить. 
 7. Получить app файл
 8. Запустить Appium с режимом Inspector
