@@ -57,7 +57,18 @@ scripts/setup
 Дождитесь индексации всех файлов! 
 ![alt text](https://github.com/artsok/training/blob/master/images/Empty Tab 2018-08-21 08-34-22.png)
 6. Скомпилировать проект и запустить на симуляторе. Производим выбор нужного симулятора и нажимаем кнопку запустить. 
-
+7. Получить app файл
+8. Запустить Appium с режимом Inspector
+```json
+{
+  "platformName": IOSTest,
+  "platformVersion": "11.3",
+  "deviceName": "iPhone 8",
+  "app": "/Users/asokovets/IdeaProjects/training/avt-mob-3/src/test/resources/apk/Wikipedia.app"
+}
+```
+Симулятор запускается самостоятельно по сигналу из Appium. Это тот симулятор, который мы указали. 
+!Внимание: В IOS, параметр deviceName должен соответствовать названию симулятора. Устанавливается само приложение и WebDriverAgent. 
 
 
 ### Простые сценарии в Appium
@@ -164,3 +175,7 @@ driver.runAppInBackground(ofSeconds(3))
 #### 9. Ошибки, которые встретились при обучении
 https://stackoverflow.com/questions/32533063/sendkey-method-in-appium-sometime-triggers-a-paste-as-well
 https://github.com/appium/appium/issues/9684
+
+
+# Запуск тестов
+mvn test -DexcludeTags={tag names}

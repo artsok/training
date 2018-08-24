@@ -1,22 +1,20 @@
 package io.github.artsok.training
 
+import io.appium.java_client.AppiumDriver
 import io.appium.java_client.MobileElement
-import io.appium.java_client.android.AndroidDriver
 import io.github.artsok.training.matchers.WikiMatchers
-import io.github.artsok.training.rules.DriverRule
-import io.github.artsok.training.rules.RotateRule
+import io.github.artsok.training.rules.AndroidTest
+import io.github.artsok.training.rules.Driver
+import io.github.artsok.training.rules.DriverResolver
+import io.github.artsok.training.rules.Rotate
 import io.github.artsok.training.ui.pageobjects.MainPage
 import io.github.artsok.training.ui.pageobjects.SearchPage
 import io.github.artsok.training.utils.lateClick
 import io.github.artsok.training.utils.lateSendKeys
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.*
-import org.junit.Before
-import org.junit.Rule
-import org.junit.Test
-import org.junit.rules.ExternalResource
-import org.junit.rules.RuleChain
-import org.junit.rules.TestRule
+import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.BeforeEach
 import org.openqa.selenium.By.id
 import org.openqa.selenium.By.xpath
 import ru.yandex.qatools.matchers.decorators.MatcherDecorators.should
@@ -24,38 +22,23 @@ import ru.yandex.qatools.matchers.decorators.TimeoutWaiter.timeoutHasExpired
 import ru.yandex.qatools.matchers.decorators.WaiterMatcherDecorator.decorateMatcherWithWaiter
 import ru.yandex.qatools.matchers.webdriver.ExistsMatcher.exists
 import ru.yandex.qatools.matchers.webdriver.driver.CanFindElementMatcher.canFindElement
-import kotlin.test.assertTrue
 
-
+@Driver
+@Rotate
+@DriverResolver
 class SearchTests {
-    private lateinit var driver: AndroidDriver<MobileElement>
+
     private lateinit var mainPage: MainPage
     private lateinit var searchPage: SearchPage
 
-    private val driverRule = DriverRule()
-    private val rotateRule = RotateRule()
-    private val extractDriver = object : ExternalResource() {
-        override fun before() {
-            driver = driverRule.getDriver()
-        }
-    }
-
-    @Rule
-    @JvmField
-    val chain: TestRule = RuleChain
-            .outerRule(driverRule)
-            .around(extractDriver)
-            .around(rotateRule)
-
-
-    @Before
-    fun setUp() {
+    @BeforeEach
+    fun setUp(driver: AppiumDriver<MobileElement>) {
         mainPage = MainPage(driver)
         searchPage = SearchPage(driver)
     }
 
-    @Test
-    fun shouldFindSpecialWordInSearchResultList() {
+    @AndroidTest
+    fun `should Find Special Word In Search Result List`(driver: AppiumDriver<MobileElement>) {
         searchPage.searchResultTPL = "Object-oriented programming language"
 
         mainPage.searchWikipediaInputInit.lateClick(errorMassage = "Can't find and click 'Search Wikipedia input'")
@@ -66,8 +49,8 @@ class SearchTests {
                         timeoutHasExpired(5000L)))
     }
 
-    @Test
-    fun searchCloseBtnShouldNotExistOnMainPage() {
+    @AndroidTest
+    fun `search Close Btn Should Not Exist On Main Page`(driver: AppiumDriver<MobileElement>) {
         searchPage.searchResultTPL = "Allure"
 
         mainPage.searchWikipediaInputInit.lateClick(errorMassage = "Can't find and click 'Search Wikipedia input'")
@@ -76,8 +59,8 @@ class SearchTests {
         assertThat("Search cancel button is still present", searchPage.closeBtn, should(not(exists())))
     }
 
-    @Test
-    fun amountOfArticleSearchShouldNotBeEmpty() {
+    @AndroidTest
+    fun `amount Of Article Search Should Not Be Empty`(driver: AppiumDriver<MobileElement>) {
         val searchLine = "Linkin Park Diskography"
 
         mainPage.searchWikipediaInputInit.lateClick()
@@ -94,8 +77,8 @@ class SearchTests {
      * Написать тест, который проверяет наличие текста “Search…” в строке поиска перед вводом текста
      * и помечает тест упавшим, если такого текста нет.
      */
-    @Test
-    fun specialWordShouldExistInSearchInput() {
+    @AndroidTest
+    fun `special Word Should Exist In Search Input`(driver: AppiumDriver<MobileElement>) {
         mainPage.searchWikipediaInputInit.lateClick()
         assertThat("Special Word 'Search…' is missed",
                 searchPage.searchInput.text, should(containsString("Search…")))
@@ -111,8 +94,8 @@ class SearchTests {
      * 3. Отменяет поиск
      * 4. Убеждается, что результат поиска пропал
      */
-    @Test
-    fun afterCancelSearchesListShouldBeEmpty() {
+    @AndroidTest
+    fun `after Cancel Searches List Should Be Empty`(driver: AppiumDriver<MobileElement>) {
         mainPage.searchWikipediaInputInit.lateClick()
         searchPage.searchInput.lateSendKeys("C++")
 
@@ -133,8 +116,8 @@ class SearchTests {
      * Ищет какое-то слово
      * Убеждается, что в каждом результате поиска есть это слово.
      */
-    @Test
-    fun resultListShouldContainSpecialWords() {
+    @AndroidTest
+    fun `result List Should Contain Special Words`(driver: AppiumDriver<MobileElement>) {
         mainPage.searchWikipediaInputInit.lateClick()
         searchPage.searchInput.lateSendKeys("Java")
 
@@ -150,8 +133,8 @@ class SearchTests {
      * (поиск по этому слову должен возвращать как минимум 3 результата).
      * Далее тест должен убеждаться, что первых три результата присутствуют в результате поиска.
      */
-    @Test
-    fun resultListShouldContainThreeSpecialArticleWithTitleAndDescription() {
+    @AndroidTest
+    fun `result List Should Contain Three Special Article With Title And Description`(driver: AppiumDriver<MobileElement>) {
         mainPage.searchWikipediaInputInit.lateClick()
         searchPage.searchInput.lateSendKeys("Java")
         searchPage.waitForElementByTitleAndDescription("Java", "Island of Indonesia")

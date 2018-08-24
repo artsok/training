@@ -17,37 +17,46 @@ interface MobileConfig : Config {
     @Key("appium.url")
     fun url(): String
 
-    @DefaultValue("Android")
     @Key("appium.capability.platformName")
     fun platformName(): String
-
-    @Key("appium.capability.deviceName")
-    fun deviceName(): String
-
-    @Key("appium.capability.platformVersion")
-    fun platformVersion(): String
-
-    @Key("appium.capability.appPackage")
-    fun appPackage(): String
-
-    @Key("appium.capability.appActivity")
-    fun appActivity(): String
-
-    @Key("appium.capability.unicodeKeyboard")
-    fun unicodeKeyboard(): Boolean
-
-    @Key("appium.capability.resetKeyboard")
-    fun resetKeyboard(): Boolean
-
-    @Key("appium.capability.automationName")
-    fun automationName(): String
 
     @Key("appium.capability.newCommandTimeout")
     fun newCommandTimeout(): Int
 
+    @Key("android.capability.deviceName")
+    fun deviceName(): String
+
+    @Key("android.capability.platformVersion")
+    fun platformVersion(): String
+
+    @Key("android.capability.appPackage")
+    fun appPackage(): String
+
+    @Key("android.capability.appActivity")
+    fun appActivity(): String
+
+    @Key("android.capability.unicodeKeyboard")
+    fun unicodeKeyboard(): Boolean
+
+    @Key("android.capability.resetKeyboard")
+    fun resetKeyboard(): Boolean
+
+    @Key("android.capability.automationName")
+    fun automationName(): String
+
     @ConverterClass(FileConverter::class)
-    @Key("appium.capability.apk")
+    @Key("android.capability.apk")
     fun apkFile(): File
+
+    @Key("ios.capability.deviceName")
+    fun deviceIOSName(): String
+
+    @Key("ios.capability.platformVersion")
+    fun platformIOSVersion(): String
+
+    @ConverterClass(FileConverter::class)
+    @Key("ios.capability.app")
+    fun appFile(): File
 }
 
 

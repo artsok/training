@@ -1,50 +1,32 @@
 package io.github.artsok.training
 
+import io.appium.java_client.AppiumDriver
 import io.appium.java_client.MobileElement
-import io.appium.java_client.android.AndroidDriver
-import io.github.artsok.training.rules.DriverRule
-import io.github.artsok.training.rules.RotateRule
+import io.github.artsok.training.rules.AndroidTest
+import io.github.artsok.training.rules.Driver
+import io.github.artsok.training.rules.DriverResolver
+import io.github.artsok.training.rules.Rotate
 import io.github.artsok.training.ui.pageobjects.*
 import io.github.artsok.training.utils.lateClick
 import io.github.artsok.training.utils.lateSendKeys
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.equalTo
 import org.hamcrest.Matchers.not
-import org.junit.Before
-import org.junit.Rule
-import org.junit.Test
-import org.junit.rules.ExternalResource
-import org.junit.rules.RuleChain
-import org.junit.rules.TestRule
+import org.junit.jupiter.api.BeforeEach
 import org.openqa.selenium.By.xpath
 import ru.yandex.qatools.matchers.decorators.MatcherDecorators.should
 import ru.yandex.qatools.matchers.webdriver.driver.CanFindElementMatcher.canFindElement
 
+@Driver
+@Rotate
+@DriverResolver
 class MyListTests {
 
-    private lateinit var driver: AndroidDriver<MobileElement>
     private lateinit var mainPage: MainPage
     private lateinit var searchPage: SearchPage
 
-    private val driverRule = DriverRule()
-    private val rotateRule = RotateRule()
-    private val extractDriver = object : ExternalResource() {
-        override fun before() {
-            driver = driverRule.getDriver()
-        }
-    }
-
-
-    @Rule
-    @JvmField
-    val chain: TestRule = RuleChain
-            .outerRule(driverRule)
-            .around(extractDriver)
-            .around(rotateRule)
-
-
-    @Before
-    fun setUp() {
+    @BeforeEach
+    fun setUp(driver: AppiumDriver<MobileElement>) {
         mainPage = MainPage(driver)
         searchPage = SearchPage(driver)
     }
@@ -61,8 +43,8 @@ class MyListTests {
      * 9. Удалить статью
      * 10. Проверить, что статья удалена
      */
-    @Test
-    fun articleShouldBeSavedToMyList() {
+    @AndroidTest
+    fun `article Should Be Saved To My List`(driver: AppiumDriver<MobileElement>) {
         val articlePage by lazy { ArticlePage(driver) }
         val navigationUIPage by lazy { NavigationUIPage(driver) }
         val myListPage by lazy { MyListPage(driver) }
@@ -94,8 +76,8 @@ class MyListTests {
      * 3. Убеждается, что вторая осталась
      * 4. Переходит в неё и убеждается, что title совпадает
      */
-    @Test
-    fun twoArticleShouldBeSavedToList() {
+    @AndroidTest
+    fun `two Article Should Be Saved To List`(driver: AppiumDriver<MobileElement>) {
         val firstArticleName = "Java"
         val secondArticleName = "Kotlin"
         val nameOfArticlesList = "My favorite list"
@@ -116,10 +98,10 @@ class MyListTests {
         articlePage.addNextArticlesToMyList(nameOfArticlesList)
         articlePage.closeArticle()
 
-        val navigationUIPage =  NavigationUIPage(driver)
+        val navigationUIPage = NavigationUIPage(driver)
         navigationUIPage.clickMyList()
 
-        val myListPage= MyListPage(driver)
+        val myListPage = MyListPage(driver)
         myListPage.openFolderByName(nameOfArticlesList)
 
         assertThat(myListPage.getAmountOfArticles(), equalTo(2))

@@ -1,9 +1,11 @@
 package io.github.artsok.training
 
+import io.appium.java_client.AppiumDriver
 import io.appium.java_client.MobileElement
-import io.appium.java_client.android.AndroidDriver
-import io.github.artsok.training.rules.DriverRule
-import io.github.artsok.training.rules.RotateRule
+import io.github.artsok.training.rules.AndroidTest
+import io.github.artsok.training.rules.Driver
+import io.github.artsok.training.rules.DriverResolver
+import io.github.artsok.training.rules.Rotate
 import io.github.artsok.training.ui.pageobjects.ArticlePage
 import io.github.artsok.training.ui.pageobjects.MainPage
 import io.github.artsok.training.ui.pageobjects.SearchPage
@@ -11,43 +13,25 @@ import io.github.artsok.training.utils.lateClick
 import io.github.artsok.training.utils.lateSendKeys
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.equalTo
-import org.junit.Before
-import org.junit.Rule
-import org.junit.Test
-import org.junit.rules.ExternalResource
-import org.junit.rules.RuleChain
-import org.junit.rules.TestRule
+import org.junit.jupiter.api.BeforeEach
 import org.openqa.selenium.By.id
 
+@Driver
+@Rotate
+@DriverResolver
 class ArticleTests {
-    private lateinit var driver: AndroidDriver<MobileElement>
+
     private lateinit var mainPage: MainPage
     private lateinit var searchPage: SearchPage
 
-    private val driverRule = DriverRule()
-    private val rotateRule = RotateRule()
-    private val extractDriver = object : ExternalResource() {
-        override fun before() {
-            driver = driverRule.getDriver()
-        }
-    }
-
-    @Rule
-    @JvmField
-    val chain: TestRule = RuleChain
-            .outerRule(driverRule)
-            .around(extractDriver)
-            .around(rotateRule)
-
-    @Before
-    fun setUp() {
+    @BeforeEach
+    fun setUp(driver: AppiumDriver<MobileElement>) {
         mainPage = MainPage(driver)
         searchPage = SearchPage(driver)
     }
 
-
-    @Test
-    fun articleShouldHaveSpecialTitle() {
+    @AndroidTest
+    fun `article Should Have Special Title`(driver: AppiumDriver<MobileElement>) {
         val articlePage by lazy { ArticlePage(driver) }
 
         mainPage.searchWikipediaInputInit.lateClick(errorMassage = "Can't find and click 'Search Wikipedia input'")
@@ -58,8 +42,8 @@ class ArticleTests {
         assertThat("We see unexpected title", articleTitle, equalTo("Java (programming language)"))
     }
 
-    @Test
-    fun articleShouldBeWithSwipeAction() {
+    @AndroidTest
+    fun `article Should Be With Swipe Action`(driver: AppiumDriver<MobileElement>) {
         val articlePage by lazy { ArticlePage(driver) }
 
         mainPage.searchWikipediaInputInit.lateClick(errorMassage = "Can't find and click 'Search Wikipedia input'")
@@ -75,8 +59,8 @@ class ArticleTests {
      * Важно: тест не должен дожидаться появления title, проверка должна производиться сразу.
      * Если title не найден - тест падает с ошибкой. Метод можно назвать assertElementPresent.
      */
-    @Test
-    fun articleShouldHaveTitleWithQuickFind() {
+    @AndroidTest
+    fun `article Should Have Title With Quick Find`(driver: AppiumDriver<MobileElement>) {
         val searchLine = "Java"
 
         mainPage.searchWikipediaInputInit.lateClick()
