@@ -3,11 +3,31 @@ package io.github.artsok.training.ui.pageobjects
 import io.appium.java_client.AppiumDriver
 import io.appium.java_client.MobileElement
 import io.appium.java_client.pagefactory.AndroidFindBy
+import io.appium.java_client.pagefactory.iOSFindBy
 import org.openqa.selenium.By
 import org.openqa.selenium.WebElement
 
 
 class SearchPage(driver: AppiumDriver<*>) : Page(driver) {
+
+    @iOSFindBy(xpath = "//XCUIElementTypeSearchField[@value='Search Wikipedia']")
+    @AndroidFindBy(xpath = "//*[contains(@text, 'Search…')]")
+    lateinit var searchInput: MobileElement
+
+    @iOSFindBy(id = "Close")
+    @AndroidFindBy(id = "search_close_btn")
+    lateinit var closeBtn: MobileElement
+
+
+    @iOSFindBy(id = "//XCUIElementTypeStaticText[@name='No results found']")
+    @AndroidFindBy(id = "//*[@text='o results found']")
+    lateinit var emptyResultText : MobileElement
+
+    //************************* Test
+    @iOSFindBy(xpath = "//XCUIElementTypeLink[contains(@name, '%s')]")
+    @AndroidFindBy(xpath = "//*[@resource-id='org.wikipedia:id/page_list_item_container']//*[contains(@text, '%s')]")
+    lateinit var searchResultTestList:String
+    //************************* Test
 
     private var searchResultsList = "org.wikipedia:id/search_results_list"
 
@@ -22,12 +42,6 @@ class SearchPage(driver: AppiumDriver<*>) : Page(driver) {
         }
 
     private var searchResultWithDescription = "//android.widget.LinearLayout[android.widget.TextView[@text='%s'] and android.widget.TextView[@text='%s']]"
-
-    @AndroidFindBy(xpath = "//*[contains(@text, 'Search…')]")
-    lateinit var searchInput: MobileElement
-
-    @AndroidFindBy(id = "search_close_btn")
-    lateinit var closeBtn: MobileElement
 
 
     fun clickByArticleWithSubString(subString: String) {

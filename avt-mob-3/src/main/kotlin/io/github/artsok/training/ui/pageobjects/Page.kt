@@ -6,6 +6,8 @@ import io.appium.java_client.pagefactory.AppiumFieldDecorator
 import io.appium.java_client.touch.WaitOptions
 import io.appium.java_client.touch.offset.ElementOption
 import io.appium.java_client.touch.offset.PointOption
+import io.github.artsok.training.utils.MobileConfig
+import org.aeonbits.owner.ConfigFactory
 import org.openqa.selenium.By
 import org.openqa.selenium.Dimension
 import org.openqa.selenium.WebElement
@@ -15,6 +17,8 @@ import org.openqa.selenium.support.ui.WebDriverWait
 import java.time.Duration
 
 abstract class Page(protected val driver: AppiumDriver<*>) {
+
+    protected val config: MobileConfig = ConfigFactory.create(MobileConfig::class.java)
 
     protected val textTPL = "//*[@text='%s']"
 

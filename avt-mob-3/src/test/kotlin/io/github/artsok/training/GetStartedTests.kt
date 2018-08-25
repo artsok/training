@@ -7,8 +7,6 @@ import io.github.artsok.training.rules.DriverResolver
 import io.github.artsok.training.rules.IOSTest
 import io.github.artsok.training.rules.Rotate
 import io.github.artsok.training.ui.pageobjects.WelcomePage
-import io.github.artsok.training.utils.lateClick
-import io.github.artsok.training.utils.wait
 
 @Driver
 @Rotate
@@ -18,16 +16,9 @@ class GetStartedTests {
     @IOSTest
     fun `should Pass Through Welcome`(driver: IOSDriver<MobileElement>) {
         val mainPage = WelcomePage(driver)
-        mainPage.welcomeTextLink.wait()
-        mainPage.nextBtn.lateClick()
-
-        mainPage.exploreText.wait()
-        mainPage.nextBtn.lateClick()
-
-        mainPage.preferredLanguagesText.wait()
-        mainPage.nextBtn.lateClick()
-
-        mainPage.learnText.wait()
-        mainPage.getStartedBtn.lateClick()
+        mainPage.readWelcomeTextAndClick()
+        mainPage.readExploreTextAndClick()
+        mainPage.readPreferredLanguagesTextAndClick()
+        mainPage.readLearnTextAndClick()
     }
 }

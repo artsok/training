@@ -30,6 +30,7 @@ class ArticleTests {
         searchPage = SearchPage(driver)
     }
 
+
     @AndroidTest
     fun `article Should Have Special Title`(driver: AppiumDriver<MobileElement>) {
         val articlePage by lazy { ArticlePage(driver) }
