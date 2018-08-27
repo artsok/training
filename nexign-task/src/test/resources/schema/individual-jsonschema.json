@@ -1,0 +1,53 @@
+{
+  "type": "object",
+  "required": [
+    "response"
+  ],
+  "properties": {
+    "response": {
+      "type": "object",
+      "required": [
+        "status",
+        "results"
+      ],
+      "properties": {
+        "status": {
+          "type": "string"
+        },
+        "orderBy": {
+          "type": "string",
+          "default": "",
+          "pattern": "^(.*)$"
+        },
+        "results": {
+          "type": "array",
+          "items": [
+            {
+              "type": "object",
+              "required": [
+                "Name",
+                "Email",
+                "Date",
+                "Personal"
+              ],
+              "properties": {
+                "Name": {
+                  "type": "string"
+                },
+                "Email": {
+                  "type": "string"
+                },
+                "Date": {
+                  "type": "string"
+                },
+                "Personal": {
+                  "type": "string"
+                }
+              }
+            }
+          ]
+        }
+      }
+    }
+  }
+}
