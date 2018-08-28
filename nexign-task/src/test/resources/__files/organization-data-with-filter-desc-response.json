@@ -1,0 +1,39 @@
+{
+  "response": {
+    "status": "success",
+    "orderBy": "desc",
+    "typeofownership": "2",
+    "results": [
+      {
+        "Company": "Velit Limited",
+        "OrgId": "76653233499",
+        "Country": "Montserrat"
+      },
+      {
+        "Company": "Nunc Ac Mattis Limited",
+        "OrgId": "25689537199",
+        "Country": "Tanzania"
+      },
+      {
+        "Company": "Nec Leo Morbi LLP",
+        "OrgId": "70216742799",
+        "Country": "Côte D'Ivoire (Ivory Coast)"
+      },
+      {
+        "Company": "Egestas Duis Ac Foundation",
+        "OrgId": "64546733199",
+        "Country": "Korea, North"
+      },
+      {
+        "Company": "Dictum Corporation",
+        "OrgId": "67458167599",
+        "Country": "Kiribati"
+      },
+      {
+        "Company": "Ac Turpis Egestas Inc.",
+        "OrgId": "31647857099",
+        "Country": "Portugal"
+      }
+    ]
+  }
+}

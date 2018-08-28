@@ -1,0 +1,28 @@
+{
+  "response": {
+    "status": "success",
+    "typeofownership": "2",
+    "results": [
+      {
+        "Company": "Semper Cursus Integer PC",
+        "OrgId": "76274245999",
+        "Country": "French Southern Territories"
+      },
+      {
+        "Company": "Ullamcorper Viverra Maecenas Foundation",
+        "OrgId": "68201498999",
+        "Country": "Ecuador"
+      },
+      {
+        "Company": "Enim Etiam Imperdiet Associates",
+        "OrgId": "47478137499",
+        "Country": "Zimbabwe"
+      },
+      {
+        "Company": "Vulputate Risus LLC",
+        "OrgId": "48959752399",
+        "Country": "Sri Lanka"
+      }
+    ]
+  }
+}

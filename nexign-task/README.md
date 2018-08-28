@@ -27,9 +27,14 @@
 2. Технологии тестирования можно выбрать самостоятельно. 
 
 #### Допущения
-1. Фильтрация данных осуществляется по полю 'Имя/Name'
+1. Фильтрация данных осуществляется по полю 'Name, либо Company'
 
 
 #### Для запуска тестов выполнить команду
 1. mvn clean test
 2. mvn allure:serve
+
+
+#### Отчет 
+![alt text](https://github.com/artsok/training/blob/master/images/Appium%202018-07-15%2013-19-.png)
+![alt text](https://github.com/artsok/training/blob/master/images/Appium%202018-07-15%2013-113.png)
