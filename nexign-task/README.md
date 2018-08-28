@@ -33,10 +33,10 @@
 #### Таблица проверок
 | Rest (getClientTypes) | Param1 (typeOfOwnership)  |  Param2 (typeOfOwnership)     |   Result   |  Response Status (http)   |
 | --- | --- | --- | --- | --- | 
-| TestCase #1           |       none                |                    1          |  список физ.лиц  | 200 |
-| TestCase #2           |       asc                 |                    1          |  список физ.лиц по возр. | 200 | 
-| TestCase #3           |       desc                |                    2          |  список юр.лиц по убыв. | 200 |
-| TestCase #4           |       none                |                    2          |  список юр.лиц     | 200 |
+| TestCase #1 (getClientTypes?typeOfOwnership=1)           |       none                |                    1          |  список физ.лиц  | 200 |
+| TestCase #2 (getClientTypes?typeOfOwnership=1&orderBy=asc)           |       asc                 |                    1          |  список физ.лиц по возр. | 200 | 
+| TestCase #3 (getClientTypes?typeOfOwnership=2&orderBy=desc)          |       desc                |                    2          |  список юр.лиц по убыв. | 200 |
+| TestCase #4 (getClientTypes?typeOfOwnership=2)          |       empty                |                    2          |  список юр.лиц     | 200 |
 | TestCase #5           |       asc                 |                   none        |    error           | 404 |        
 
 
