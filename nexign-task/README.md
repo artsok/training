@@ -30,11 +30,22 @@
 1. Фильтрация данных осуществляется по полю 'Name, либо Company'
 
 
+#### Таблица проверок
+| Rest (getClientTypes) | Param1 (typeOfOwnership)  |  Param2 (typeOfOwnership)     |   Result   |  Response Status (http)   |
+| --- | --- | --- | --- | --- | 
+| TestCase #1           |       none                |                    1          |  список физ.лиц  | 200 |
+| TestCase #2           |       asc                 |                    1          |  список физ.лиц по возр. | 200 | 
+| TestCase #3           |       desc                |                    2          |  список юр.лиц по убыв. | 200 |
+| TestCase #4           |       none                |                    2          |  список юр.лиц     | 200 |
+| TestCase #5           |       asc                 |                   none        |    error           | 404 |        
+
+
+
 #### Для запуска тестов выполнить команду
 1. mvn clean test
 2. mvn allure:serve
 
 
 #### Отчет 
-![alt text](https://github.com/artsok/training/blob/master/images/Appium%202018-07-15%2013-19-.png)
-![alt text](https://github.com/artsok/training/blob/master/images/Appium%202018-07-15%2013-113.png)
+![alt text](https://github.com/artsok/training/blob/master/images/Allure%20Report%202018-08-28%2017-47-20.png)
+![alt text](https://github.com/artsok/training/blob/master/images/Allure%20Report%202018-08-28%2017-48-36.png)
