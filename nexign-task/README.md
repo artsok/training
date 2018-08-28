@@ -37,7 +37,7 @@
 | TestCase #2 (getClientTypes?typeOfOwnership=1&orderBy=asc)           |       asc                 |                    1          |  список физ.лиц по возр. | 200 | 
 | TestCase #3 (getClientTypes?typeOfOwnership=2&orderBy=desc)          |       desc                |                    2          |  список юр.лиц по убыв. | 200 |
 | TestCase #4 (getClientTypes?typeOfOwnership=2)          |       empty                |                    2          |  список юр.лиц     | 200 |
-| TestCase #5           |       asc                 |                   none        |    error           | 404 |        
+| TestCase #5 (getClientTypes?typeOfOwnership=&orderBy=asc)           |       asc                 |                   none        |    error           | 404 |        
 
 
 
