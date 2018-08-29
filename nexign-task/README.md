@@ -49,3 +49,9 @@
 #### Отчет 
 ![alt text](https://github.com/artsok/training/blob/master/images/Allure%20Report%202018-08-28%2017-47-20.png)
 ![alt text](https://github.com/artsok/training/blob/master/images/Allure%20Report%202018-08-28%2017-48-36.png)
+
+
+#### Доработка тестового задания
+1. Разработать Rest (getClientTypes) используя Spring
+
+curl -sS 'http://localhost:9000/api/getClientypeOfOwnership=1&orderBy=asc'
