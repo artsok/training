@@ -2,6 +2,7 @@ package io.github.artsok.tasks;
 
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import io.qameta.allure.restassured.AllureRestAssured;
+import io.restassured.RestAssured;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.builder.ResponseSpecBuilder;
 import io.restassured.filter.log.LogDetail;
@@ -11,6 +12,8 @@ import org.junit.BeforeClass;
 import org.junit.ClassRule;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
+import static com.github.tomakehurst.wiremock.client.WireMock.equalTo;
+import static com.github.tomakehurst.wiremock.client.WireMock.get;
 import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig;
 import static io.restassured.RestAssured.*;
 import static io.restassured.parsing.Parser.JSON;
@@ -73,11 +76,12 @@ public class BaseApiTest {
         port = WIRE_MOCK_RULE.port();
         basePath = "api";
         defaultParser = JSON;
-        requestSpecification = new RequestSpecBuilder().addFilter(new AllureRestAssured())
+        requestSpecification = new RequestSpecBuilder()
                 .setAccept(ContentType.JSON)
                 .setContentType(ContentType.JSON)
                 .log(LogDetail.ALL)
                 .build();
+        RestAssured.filters(new AllureRestAssured());
 
         WIRE_MOCK_RULE.stubFor(get(urlPathEqualTo(WIREMOCK_PATH))
                 .atPriority(2)
