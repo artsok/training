@@ -1,10 +1,7 @@
 package io.github.artsok.tasks.model;
 
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -20,17 +17,18 @@ import java.time.LocalDate;
 public class Individual {
     @Id
     @GeneratedValue
-    private Long id;
+    @Column(name = "ID")
+    private Integer id;
 
-    @Column(nullable = false)
+    @Column(name = "NAME", nullable = false)
     private String name;
 
-    @Column
+    @Column(name = "EMAIL")
     private String email;
 
-    @Column(nullable = false)
+    @Column(name = "BIRTHDAY", nullable = false)
     private LocalDate birthday;
 
-    @Column(unique = true, nullable = false)
+    @Column(name = "PERSONALID", unique = true, nullable = false)
     private Long personalId;
 }
