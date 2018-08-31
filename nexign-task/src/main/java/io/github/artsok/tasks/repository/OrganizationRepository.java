@@ -1,6 +1,6 @@
 package io.github.artsok.tasks.repository;
 
-import io.github.artsok.tasks.dao.OrganizationDAO;
+import io.github.artsok.tasks.model.dao.OrganizationDAO;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
