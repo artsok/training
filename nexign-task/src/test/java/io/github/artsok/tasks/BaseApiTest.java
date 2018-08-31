@@ -87,7 +87,7 @@ public class BaseApiTest {
                 .atPriority(2)
                 .withQueryParam(TYPE_OF_OWNERSHIP_PARAM, equalTo(INDIVIDUAL_OWNERSHIP))
                 .willReturn(aResponse()
-                        .withBodyFile("Individual-data-with-no-filter-response.json")
+                        .withBodyFile("IndividualDAO-data-with-no-filter-response.json")
                         .withStatus(STATUS_CODE_200)));
 
         WIRE_MOCK_RULE.stubFor(get(urlPathEqualTo(WIREMOCK_PATH))
@@ -95,7 +95,7 @@ public class BaseApiTest {
                 .withQueryParam(TYPE_OF_OWNERSHIP_PARAM, equalTo(INDIVIDUAL_OWNERSHIP))
                 .withQueryParam(ORDER_PARAM, equalTo(ORDER_ASC))
                 .willReturn(aResponse()
-                        .withBodyFile("Individual-data-with-filter-response.json")
+                        .withBodyFile("IndividualDAO-data-with-filter-response.json")
                         .withStatus(STATUS_CODE_200)));
 
         WIRE_MOCK_RULE.stubFor(get(urlPathEqualTo(WIREMOCK_PATH))
@@ -117,7 +117,7 @@ public class BaseApiTest {
                 .withQueryParam(ORDER_PARAM, equalTo(ORDER_ASC))
                 .withQueryParam(TYPE_OF_OWNERSHIP_PARAM, equalTo(""))
                 .willReturn(aResponse()
-                        .withBodyFile("Individual-data-with-no-filter-error-response.json")
+                        .withBodyFile("IndividualDAO-data-with-no-filter-error-response.json")
                         .withStatus(STATUS_CODE_404)));
     }
 }

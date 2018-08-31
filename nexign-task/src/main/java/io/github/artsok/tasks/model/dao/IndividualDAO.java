@@ -1,7 +1,9 @@
-package io.github.artsok.tasks.model;
+package io.github.artsok.tasks.model.dao;
 
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -9,12 +11,16 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import java.time.LocalDate;
 
+/**
+ * DAO is an abbreviation for Data Access Object, so it should encapsulate the logic for retrieving,
+ * saving and updating data in your data storage (a database, a file-system, whatever).
+ * Here is an example how the DAO and DTO interfaces would look like:
+ */
 @Entity
 @Data
 @NoArgsConstructor
-@Builder
 @AllArgsConstructor
-public class Individual {
+public class IndividualDAO {
     @Id
     @GeneratedValue
     @Column(name = "ID")

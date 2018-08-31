@@ -1,8 +1,7 @@
-package io.github.artsok.tasks.model;
+package io.github.artsok.tasks.model.dao;
 
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -14,10 +13,8 @@ import javax.persistence.Id;
 @Entity
 @Data
 @NoArgsConstructor
-@Builder
 @AllArgsConstructor
-public class Organization {
-
+public class OrganizationDAO {
     @Id
     @GeneratedValue
     private Long id;
