@@ -602,6 +602,8 @@ public final class HttpUrl {
     public Builder newBuilder() {
         Builder result = new Builder();
         result.scheme = scheme;
+        result.encodedUsername = encodedUsername();
+        result.encodedPassword = encodedPassword();
         result.host = host;
         // If we're set to a default port, unset it in case of a scheme change.
         result.port = port != defaultPort(scheme) ? port : -1;
