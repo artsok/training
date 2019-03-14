@@ -25,7 +25,6 @@
         <allure-maven.version>2.10.0</allure-maven.version>
         <allure-report.version>2.10.0</allure-report.version>
         <allure-junit5.version>2.10.0</allure-junit5.version>
-        <allure.results.directory>${project.build.directory}/allure-results</allure.results.directory>
         <htmlelements.version>1.19</htmlelements.version>
         <webdriver.matchers.version>1.4.1</webdriver.matchers.version>
         <selenium-jupiter.version>3.1.1</selenium-jupiter.version>
@@ -96,12 +95,16 @@
                     <argLine>
                         -javaagent:"${settings.localRepository}/org/aspectj/aspectjweaver/${aspectj.version}/aspectjweaver-${aspectj.version}.jar"
                     </argLine>
-                    <!--<systemProperties>-->
+                    <systemProperties>
                         <!--<property>-->
                             <!--<name>junit.jupiter.extensions.autodetection.enabled</name>-->
                             <!--<value>true</value>-->
                         <!--</property>-->
-                    <!--</systemProperties>-->
+                        <property>
+                            <name>allure.results.directory</name>
+                            <value>${project.build.directory}/allure-results</value>
+                        </property>
+                    </systemProperties>
                 </configuration>
                 <dependencies>
                     <dependency>
