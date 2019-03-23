@@ -11,7 +11,7 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import static org.hamcrest.Matchers.hasSize;
 
 @ExtendWith(SeleniumExtension.class)
-public class AtlasWayTest {
+class AtlasWayTest {
 
     @Test
     void simpleTestWithPageElementPattern(ChromeDriver driver) {

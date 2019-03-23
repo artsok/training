@@ -11,7 +11,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasSize;
 
 @ExtendWith(SeleniumExtension.class)
-public class PageElementWayTest {
+class PageElementWayTest {
 
     @Test
     void simpleTestWithPageElementPattern(ChromeDriver driver)  {
