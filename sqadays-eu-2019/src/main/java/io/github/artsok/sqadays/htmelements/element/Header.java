@@ -1,4 +1,4 @@
-package io.github.artsok.sqadays.element;
+package io.github.artsok.sqadays.htmelements.element;
 
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;

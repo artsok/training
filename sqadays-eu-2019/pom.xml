@@ -75,6 +75,11 @@
             <artifactId>selenium-jupiter</artifactId>
             <version>${selenium-jupiter.version}</version>
         </dependency>
+        <dependency>
+            <groupId>io.qameta.atlas</groupId>
+            <artifactId>atlas-webdriver</artifactId>
+            <version>1.5.0</version>
+        </dependency>
     </dependencies>
     <build>
         <plugins>

@@ -1,6 +1,7 @@
-package io.github.artsok.sqadays.pages;
+package io.github.artsok.sqadays.htmelements.pages;
 
-import io.github.artsok.sqadays.element.Header;
+
+import io.github.artsok.sqadays.htmelements.element.Header;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;

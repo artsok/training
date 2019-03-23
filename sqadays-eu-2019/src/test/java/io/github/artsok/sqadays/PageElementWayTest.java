@@ -1,7 +1,7 @@
 package io.github.artsok.sqadays;
 
-import io.github.artsok.sqadays.pages.MainPage;
-import io.github.artsok.sqadays.pages.SearchPage;
+import io.github.artsok.sqadays.htmelements.pages.MainPage;
+import io.github.artsok.sqadays.htmelements.pages.SearchPage;
 import io.github.bonigarcia.seljup.SeleniumExtension;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

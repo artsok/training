@@ -2,8 +2,9 @@ package io.github.artsok.tasks;
 
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class GetTaskAlgorithmQA {
 
@@ -52,7 +53,22 @@ public class GetTaskAlgorithmQA {
     }
 
 
+    @Test
+    void enhancedAlgorithm() {
+        int[] array = {10, 9, 10, 9, 8};
+        Map<Integer, List<Integer>> map = new HashMap<>();
+
+        for (int i = 0; i < array.length ; i++) {
+            List<Integer> index = new ArrayList<>(1);
+            index.add(i);
+
+            map.merge(array[i], index, (list1, list2) -> Stream.of(list1, list2)
+                    .flatMap(Collection::stream)
+                    .collect(Collectors.toList()));;
+        }
 
 
+        System.out.println(map);
 
+    }
 }

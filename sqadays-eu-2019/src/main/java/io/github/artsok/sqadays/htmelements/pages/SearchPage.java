@@ -1,4 +1,4 @@
-package io.github.artsok.sqadays.pages;
+package io.github.artsok.sqadays.htmelements.pages;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
