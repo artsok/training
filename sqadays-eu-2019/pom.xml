@@ -28,6 +28,8 @@
         <htmlelements.version>1.19</htmlelements.version>
         <webdriver.matchers.version>1.4.1</webdriver.matchers.version>
         <selenium-jupiter.version>3.1.1</selenium-jupiter.version>
+        <atlas.version>1.5.0</atlas.version>
+        <junit.platform.surefire.provider.version>1.2.0</junit.platform.surefire.provider.version>
     </properties>
     <dependencies>
         <dependency>
@@ -78,7 +80,7 @@
         <dependency>
             <groupId>io.qameta.atlas</groupId>
             <artifactId>atlas-webdriver</artifactId>
-            <version>1.5.0</version>
+            <version>${atlas.version}</version>
         </dependency>
     </dependencies>
     <build>
@@ -101,10 +103,6 @@
                         -javaagent:"${settings.localRepository}/org/aspectj/aspectjweaver/${aspectj.version}/aspectjweaver-${aspectj.version}.jar"
                     </argLine>
                     <systemProperties>
-                        <!--<property>-->
-                            <!--<name>junit.jupiter.extensions.autodetection.enabled</name>-->
-                            <!--<value>true</value>-->
-                        <!--</property>-->
                         <property>
                             <name>allure.results.directory</name>
                             <value>${project.build.directory}/allure-results</value>
@@ -120,7 +118,7 @@
                     <dependency>
                         <groupId>org.junit.platform</groupId>
                         <artifactId>junit-platform-surefire-provider</artifactId>
-                        <version>1.2.0</version>
+                        <version>${junit.platform.surefire.provider.version}</version>
                     </dependency>
                 </dependencies>
             </plugin>

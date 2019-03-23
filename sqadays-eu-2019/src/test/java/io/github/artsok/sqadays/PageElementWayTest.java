@@ -21,5 +21,4 @@ public class PageElementWayTest {
         SearchPage searchPage = new SearchPage(driver);
         assertThat(searchPage.getRepositories(), hasSize(10));
     }
-
 }

@@ -17,7 +17,6 @@ public class AtlasWayTest {
     void simpleTestWithPageElementPattern(ChromeDriver driver) {
         Atlas atlas = new Atlas(new WebDriverConfiguration(driver, "https://github.com"));
         GitHubSite site = atlas.create(driver, GitHubSite.class);
-
         site.onSearchPage("Atlas").repositories().waitUntil(hasSize(10));
     }
 }
