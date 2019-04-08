@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">DevFest SBP Example</string>
+    <string name="talk_name">Как мы ускоряем Яндекс под Android</string>
+    <string name="talk_author">Артем Соковец</string>
+    <string name="talk_description">Рекламируя вашему другу Kotlin, как замену Java, наверняка первым аргументом будет тот самый синтаксический сахар, от которого мы получаем профит каждый день: поддержка nullability из коробки, аргументы по умолчанию, свойства-делегаты, data и sealed классы и т.д. Но если нам понадобится прикрутить к проекту процессор аннотаций, то, к сожалению, вся информация, которую получится собрать о нашем коде, будет Java-специфична, а Kotlin-фичи останутся незамеченными. В этом докладе мы выясним, как использовать метаданные, добавляемые Kotlin-компилятором к коду, чтобы получить информацию об использованных особенностях языка, и как использовать её во время обработки аннотаций.</string>
+    <string name="all_speech">Все доклады</string>
+    <string-array name="talk_tags_names">
+        <item>Next Generation Mobile Platform</item>
+        <item>Android</item>
+        <item>Kotlin</item>
+    </string-array>
+</resources>
