@@ -11,10 +11,10 @@ import android.widget.TextView
 import artsok.github.io.androidacademyexample.R.drawable.*
 
 
-class MainActivity : AppCompatActivity() {
+class MainActivityLesson_1 : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(R.layout.activity_main_lesson_1)
 
         val talkTags = resources.getStringArray(R.array.talk_tags_names)
         addTags(talkTags)

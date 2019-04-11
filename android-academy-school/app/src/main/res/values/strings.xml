@@ -3,7 +3,11 @@
     <string name="talk_name">Как мы ускоряем Яндекс под Android</string>
     <string name="talk_author">Артем Соковец</string>
     <string name="talk_description">Рекламируя вашему другу Kotlin, как замену Java, наверняка первым аргументом будет тот самый синтаксический сахар, от которого мы получаем профит каждый день: поддержка nullability из коробки, аргументы по умолчанию, свойства-делегаты, data и sealed классы и т.д. Но если нам понадобится прикрутить к проекту процессор аннотаций, то, к сожалению, вся информация, которую получится собрать о нашем коде, будет Java-специфична, а Kotlin-фичи останутся незамеченными. В этом докладе мы выясним, как использовать метаданные, добавляемые Kotlin-компилятором к коду, чтобы получить информацию об использованных особенностях языка, и как использовать её во время обработки аннотаций.</string>
+    <string name="talk_description_eng">When promoting Kotlin over Java to your friend the first argument you’ll probably use will be its powerful syntax: in-house nullability support, default arguments, delegated properties, data sealed classes, etc. These features are really the stuff we’re benefiting from everyday, but if we’ll take Java annotation processors then sadly the only information they can get about our code will be Java-related and no info about Kotlin-specific features. In this talk we’ll find out how to use Kotlin metadata added by the compiler to get info about Kotlin language features in the code and utilise it during annotation processing.</string>
     <string name="all_speech">Все доклады</string>
+    <string name="kotlin_annotation">Kotlin-friendly Annotation Processing</string>
+    <string name="label_android">Android</string>
+    <string name="last_name">Sergey Ryabov</string>
     <string-array name="talk_tags_names">
         <item>Next Generation Mobile Platform</item>
         <item>Android</item>

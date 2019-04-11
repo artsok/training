@@ -148,3 +148,8 @@ Leak Refeence
 Рекомендует делать плоскую иерархию, чтобы было меньше проходов.
 
 Прочитать про вектор.
+
+ConstraintLayout
+https://www.youtube.com/watch?v=z53Ed0ddxgM (Демонстрация работы с ConstraintLayout)
+https://startandroid.ru/ru/uroki/vse-uroki-spiskom/490-urok-181-constraintslayout-advanced.html
+https://startandroid.ru/ru/uroki/vse-uroki-spiskom/491-urok-182-constraintlayout-chain-weight-barrier-group.html
