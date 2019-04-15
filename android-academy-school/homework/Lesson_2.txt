@@ -160,6 +160,7 @@ Vector
 https://habr.com/ru/company/rambler-co/blog/267073/
 
 ConstraintLayout
+https://youtu.be/P9Zstbk0lPw
 1. Есть горячие кнопки при зумме
 2. пример с логиным и паролем. Как делать привязку.
 3. О разлияных компоновках рассках

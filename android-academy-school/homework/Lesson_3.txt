@@ -1,0 +1,77 @@
+RecyclerView
+https://youtu.be/G35pcPv_tEA
+
+Элементы:
+1. LayoutManager
+2. RecycledView Pool
+3. Adapter
+4. RecyclerView
+5. Decorators
+6. Animators
+7. ItemTouchHelper
+
+Для базового использования не нужно все 7 элементов, только нужен сам RecyclerView, Adapter и LayoutManager.
+Recycler дает очень простые инструменты, которых много, но они простые. Это некая борьба со сложностью.
+
+Недостатки ListView
+- Layout'ы в списках становились все сложнее
+- Взаимодействие с ними тоже сложное
+- Большое количество legacy функционала
+- В ListView был дублирующий и спорный функционал. Они заключались в том, что можно было реализовать какой-то функционал двумя способами.
+Например: можно было повесить clickListener на ListView, clickListener на сам элемент, несколько clickListenerов на элемент и ListView.
+Сложность была не столько в коде, сколько в том, чтобы понять, что ты написал два месяца назад.
+- Проблемы с фокусом.
+- Мало вариантов размещение View. Детально рассказ в докладе на 10 минуте.
+- Анимация в ListView адская боль. Требовалось вмешиваться в процесс Layout-инга.
+
+
+
+У RecyclerView основные компоненты:
+- LayoutManager (Размещает View)
+- ItemAnimator (Анимирует View)
+- Adapter (Создает элементы, устанавливает новые данные )
+- Decorator (Дорисовывает ваши элементы, до того состояния как вы хотели)
+
+RecyclerView знает все обо всех, но не знает друг про друга.
+
+I. LayoutManager
+- LinearLayoutManager - размещение элементов друг за другом
+- GridLayoutManager - размещение элементов по сетке (таблица)
+- StaggeredGridLayoutManager - размещение по сетке, но есть возможность проставлять разный span для разных элементов.
+Вы не обязаны следовать тому, что все элементы у вас одной ширины, высоты, одного размера.
+Пример: https://stackoverflow.com/questions/29642389/no-good-example-about-recyclerview-and-staggeredgridlayoutmanager-in-android-doc
+
+RecyclerView отвечает за scroll и LayoutManager отвечает за scroll. При этом RecyclerView обрабатывает взаомодействие пользователя с экраном,
+перехватывает touch, флинги, рассчитывает все это и говорит LayoutManager на сколько это нужно проскролить. Как только LayoutManager не может проскролить,
+RecyclerView перестает слать сообщение LayoutManager для скрола.
+
+LayoutManager также отвечает за accessibility и view focusing. View focusin, то что изчезло из ListView, когда автор рассказывал про List Selection.
+Accessibility, с помощью данного класса можете предоставлять легко информацию людям с ограниченными возможностями.
+
+II. Adapter
+- Адаптер ответветственнен перед RecyclerView, какие элементы изменились, плюс тоже самое что и в ListView. У ListView был один метод notifyDataSetChange.
+- Отвечает за обработку касаний
+- Ответственен за частичное обновление данных. Не все ViewHolder можно переиспользовать и система старается предугодать,
+какие вы хотите использовать их а какие нет.
+
+API адаптера:
+ViewHolder onCreateViewHolder (ViewGroup parent, int viewType)
+void onBindViewHolder(ViewHolder holder, int position)
+int getItemViewType(int position)
+boolean onFailedToRecyclerView(ViewHolder holder)
+void onViewRecyclerView(ViewHolder holder)
+
+У методов понятные название и нужно делать, то что они требуют.
+В адаптере есть метод notifyDataSetChange, НО о нем нужно забыть. Какие методы есть:
+1) notifyItemChanged()
+2) notifyItemInserted()
+3) notifyItemMoved()
+4) notifyItemRemoved()
+Они нужны для того чтобы анимировать ваши элементы, которые перемещаются передвигаются, удаляются или добавляются. Для этого в пакете RecyclerView предусмотрен
+default аниматор, который делает какие-то простейшие анимации, но Вы можете написать свой в качестве домашнего задания.
+
+Если вы перемещаете элемент от одной позиции к другой, это не значит, что что-то новое создается, что-то новое бандится - элемент просто перемещается.
+Нет лишних вызовов onBindViewHolder(), возможность анимировать элементы, нет лишних вызовов onCreateViewHolder(). Управляете своими данными на экране,
+как угодно и это круто.
+
+Еще немного поговорим про нотификации:
