@@ -6,4 +6,6 @@
     <color name="colorTags">#fd2de2</color>
     <color name="colorTagsText">#ffffff</color>
     <color name="colorButton">#0c85ae</color>
+    <color name="header_lesson_2.1">#4e0ac6</color>
+    <color name="job_name_lesson_2.1">#5212c7</color>
 </resources>

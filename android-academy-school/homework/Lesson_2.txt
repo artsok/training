@@ -149,7 +149,18 @@ Leak Refeence
 
 Прочитать про вектор.
 
+Изучение информации по второй лекции
+
 ConstraintLayout
 https://www.youtube.com/watch?v=z53Ed0ddxgM (Демонстрация работы с ConstraintLayout)
 https://startandroid.ru/ru/uroki/vse-uroki-spiskom/490-urok-181-constraintslayout-advanced.html
 https://startandroid.ru/ru/uroki/vse-uroki-spiskom/491-urok-182-constraintlayout-chain-weight-barrier-group.html
+
+Vector
+https://habr.com/ru/company/rambler-co/blog/267073/
+
+ConstraintLayout
+1. Есть горячие кнопки при зумме
+2. пример с логиным и паролем. Как делать привязку.
+3. О разлияных компоновках рассках
+4. О MotivationLayout, можно делать анимацию.
