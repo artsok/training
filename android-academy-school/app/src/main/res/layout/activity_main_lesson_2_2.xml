@@ -182,29 +182,29 @@
         android:layout_marginTop="8dp"
         android:background="@drawable/rectangle_rounded_all"
         android:padding="5dp"
-        android:text="Android"
+        android:text="@string/talk_label"
         android:textColor="@color/colorTagsText"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="@+id/guideline2"
         app:layout_constraintTop_toBottomOf="@+id/room_location" />
 
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/talk_time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:text="11:15"
+        android:text="@string/talk_time"
         android:textColor="@android:color/background_dark"
         android:textSize="24sp"
         app:layout_constraintStart_toStartOf="@+id/guideline2"
         app:layout_constraintTop_toBottomOf="@+id/textView6" />
 
     <TextView
-        android:id="@+id/textView3"
+        android:id="@+id/talk_date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:text="15 Aprile"
+        android:text="@string/talk_date"
         android:textColor="@color/header_lesson_2.1"
         android:textStyle="bold"
         app:layout_constraintBaseline_toBaselineOf="@+id/textView2"

@@ -75,3 +75,68 @@ default аниматор, который делает какие-то прост
 как угодно и это круто.
 
 Еще немного поговорим про нотификации:
+1) long getItemId(int position)
+2) void notifyItemChanged(int position, Object payload)
+3) void notifyItemRangeChanged(/*...*/, Object payload)
+
+Передать ключи List payloads и потом по этим ключам, что-то делать.
+
+Частые ошибки:
+1) public void onBindViewHolder(...) {
+if(isFirstShow(position)) {
+    animateAppearing(holder);
+    }
+    bind(holder, position);
+}
+
+На bind можно запускать онимацию, но не нужно.
+
+2) void setData(List data) {
+    this.data = data;
+    notifyItemRangeChanged(0, getItemCount());
+    //or
+    notifyDataSetChanged();
+}
+Создастся миллион ViewHolderов, они попытаются друг друга заменить, ничего не произойдет и возможно вы потратите СPU устройства и произойдут, какие то лаги.
+
+3) public void onBindViewHolder(...) {
+ holder.itemView.setOnClickListener(v -> { itemClicked(position);});
+}
+
+Нужно getAdapterPosition(), также создается объект на каждый bind(). Берется position элемента, который был передан в onBindViewHolder(..). Эта позиция может быть изменится,
+ваш элемент переместиться при помощи notifyItemMoved. Как вы помните при изминение позиции onBindViewHolder не вызывается.
+
+Как лучше переписать третий пункт:
+public RecyclerView.ViewHolder onCreateViewHolder(...) {
+    View v = createView();
+    RecyclerView.ViewHolder h = new RecyclerView.ViewHolder(v); {};
+    v.setOnClickListener(it -> {
+        int adapterPosition = h.getAdapterPosition();
+        if(adapterPosition != RecyclerView.NO_POSITION) {
+            itemClicked(adapterPosition);
+        }
+    }
+    return v;
+}
+
+4) public ViewHolder onCreateViewHolder(...) {
+    if(cachedHeader == null) {
+        cachedHeader = createHeader();
+    }
+    if (viewType == R.layout.header)  {
+        return cachedHeader;
+    } else {
+        return createItem();
+    }
+}
+Преждевременная оптимизация. Если у вашего адаптера попросили onCreateViewHolder, вы должны его создать. Никогда ненадо брать ничего кэшированного. В этом смысл фреймворка
+вызывать тогда, когда он нужен. Также пример того, как вкачестве ViewType можно использовать id.
+
+II. ViewHolder
+Назначение ViewHolder, чтобы кэшировать относительно дорогого findViewById; Для чего еще нужен был ViewHolder, все, только чтобы оптимизировать работу.
+
+Для чего нужен ViewHolder в RecyclerView?
+- Кеш для относительно дорогого findViewById
+- Он является мостом между LayoutManager, Animator'ами и Decorator'ами. В нем хранится много важной информации для них, чтобы понимать,
+где это находится, как это анимировать и что это вообще такое и откуда оно прилетело.
+- Основной элемент Recycling'a

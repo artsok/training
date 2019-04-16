@@ -15,6 +15,9 @@
     <string name="author_description">I am Artem Sokovets from Russian Federation, Saint-Petersburg and have experience in test automation. I work at Sberbank-Technology on position Leading Engineer of Automation QA (responsibilities: CI/CD, selenium grid (openshift), development of automated scripts and QA tools). Have Java Certifications: OCA, OCP 7 and experience as a local speaker of Russian Conferences (SQADays, SberDays, etc) and test automation meetups.</string>
     <string name="talk_name_lesson_2">On the Other Side of Page Object</string>
     <string name="room_name">Room 1</string>
+    <string name="talk_date">15 Aprile</string>
+    <string name="talk_time">11:15</string>
+    <string name="talk_label">Android</string>
 
     <string-array name="talk_tags_names">
         <item>Next Generation Mobile Platform</item>
