@@ -140,3 +140,61 @@ II. ViewHolder
 - Он является мостом между LayoutManager, Animator'ами и Decorator'ами. В нем хранится много важной информации для них, чтобы понимать,
 где это находится, как это анимировать и что это вообще такое и откуда оно прилетело.
 - Основной элемент Recycling'a
+
+API ViewHolder
+Используется, чтобы найти какую-нибуь позицию.
+
+1) getAdapterPosition - где ваш элемент находится в вашем списке данных. Adapter position может быть значительно больше, чем Layout position.
+2) getItemId()
+3) getItemViewType()
+4) getLayoutPosition() - где ваш элемент находится в Layout
+5) getOldPosition() - нужен для аниматоров, чтобы понять откуда куда он переехал.
+6) isRecyclable()/setRecyclable(boolean)
+
+RecyclerView это обычный ViewGroup. Там элементы расположены от 0-го до последнего. 10-элементов на экране появляется, 10-там там и лежит, чуть выше два закэшированно
+и чуть ниже два закэшированно.
+
+
+- Жизнь и смерть ViewHolder'a
+ViewHolder основной элемент RecyclerView. Весь смысл RecyclerView, чтобы ViewHolder не умирали.
+
+LayoutManager говорит RecyclerView, что ему нужен View для позиции. RecyclerView не сразу лезет в адаптер, а он идет в Cache. В Cache лежат View для каждой позиции.
+(Например: если у вас 1000 элементов в DataSet, в кэше может лежать такое же число View). Возвращается View и она уходит далее в LayoutManager.
+
+Что будет, если кэщ скажет, что у нас нет этого View, мы пойдем в адаптер и спросим, скажи пожалуйста у этой позиции какой ViewType, адаптер скажет номер такойто.
+После этого RecyclerView пойдет (getViewHolderByType) в RecycledPool (не кэш), и он найдет готовую View у которой неправильные данные, там что-то странное написано,
+незнаем что, он попросит его вернуть, чтобы потом заполнить.
+
+И если ее там не будет вдруг, он скажет адаптеру (createViewHolder) пожалуйста создай ее. Адаптер ее создаст вернет RecyclerView.
+
+Если она будет в  RecycledPool, то RecyclerView не будет говорит, что ее надо создать, а просто скажет bindViewHolder и она вернется в LayoutManager.
+
+Рассказ про удаление и добавление: 35 мин, 30 сек.
+
+Адаптер помогает RecyclerView, что можно переиспользовать, а что можно выкинуть.
+
+TransientState - это не относится к RecyclerView, это относится к состоянию системы. То состояние, в котором нельзя определить, закончило ли свою жизнь View или нет.
+Это анимация, это selection
+
+
+Зачем нужен sethasfixedsize (При создание RecyclerView)? - Применяем, если нам известно, что RecyclerView не меняет свой размер, т.е размер данных известен.
+Это исключает дополнительные перерисовки RecyclerView, когда у вас меняется ваш DataSet. По умолчанию считается, если ваш dataset поменялся, то возможно у вас мог
+раздвинуться (в размерах изменится) и тогда нужно перерисовать все, возможно перещетать все, размеры других соседей. Говорим о размерх самого RecyclerView, не внутренних
+элементов.
+>>https://stackoverflow.com/questions/28709220/understanding-recyclerview-sethasfixedsize
+RecyclerView can perform several optimizations if it can know in advance that RecyclerView's size is not affected by the adapter contents.
+RecyclerView can still change its size based on other factors (e.g. its parent's size) but this size calculation cannot depend on the size of its children or contents of its adapter (except the number of items in the adapter).
+If your use of RecyclerView falls into this category, set this to {@code true}.
+It will allow RecyclerView to avoid invalidating the whole layout when its adapter contents change.
+@param hasFixedSize true if adapter changes cannot affect the size of the RecyclerView.
+
+Чтобы посмотрет, как у других приложений устроены padding и margin, требуется зайти в Developer Options включить show layout bounds.
+Посмотреть как View засунуты друг относительно друга.
+
+Как узнать, что проблема в приложении?
+Включить в Developer Options - Profile GPU rendering. Показывае, как каждый фрейм отрисовывается и сколько времени занимает. Overlay добавится на каждый элемен, на каждый слой.
+Зеленая полоса - это 16 мс магических. Как только залазите более 16 мс повод посмотреть, что происходит с вашей отрисовкой.
+
+Android Academy MSK - Занятие #3
+https://www.youtube.com/watch?v=vGwGVnrjN0w
+https://github.com/Android-Academy-MSK/Lecture3-Code
